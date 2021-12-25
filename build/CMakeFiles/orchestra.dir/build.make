@@ -691,6 +691,20 @@ CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_stdio_uart\stdio_u
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/orchestra.dir/C_/PICO/pico-sdk/src/rp2_common/pico_stdio_uart/stdio_uart.c.s"
 	C:\PROGRA~2\GNUARM~1\102021~1.10\bin\AR19DD~1.EXE $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S C:\PICO\pico-sdk\src\rp2_common\pico_stdio_uart\stdio_uart.c -o CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_stdio_uart\stdio_uart.c.s
 
+CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_adc\adc.c.obj: CMakeFiles\orchestra.dir\flags.make
+CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_adc\adc.c.obj: C:\PICO\pico-sdk\src\rp2_common\hardware_adc\adc.c
+CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_adc\adc.c.obj: CMakeFiles\orchestra.dir\compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\PICO\orchestra\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_47) "Building C object CMakeFiles/orchestra.dir/C_/PICO/pico-sdk/src/rp2_common/hardware_adc/adc.c.obj"
+	C:\PROGRA~2\GNUARM~1\102021~1.10\bin\AR19DD~1.EXE $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_adc\adc.c.obj -MF CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_adc\adc.c.obj.d -o CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_adc\adc.c.obj -c C:\PICO\pico-sdk\src\rp2_common\hardware_adc\adc.c
+
+CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_adc\adc.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/orchestra.dir/C_/PICO/pico-sdk/src/rp2_common/hardware_adc/adc.c.i"
+	C:\PROGRA~2\GNUARM~1\102021~1.10\bin\AR19DD~1.EXE $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E C:\PICO\pico-sdk\src\rp2_common\hardware_adc\adc.c > CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_adc\adc.c.i
+
+CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_adc\adc.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/orchestra.dir/C_/PICO/pico-sdk/src/rp2_common/hardware_adc/adc.c.s"
+	C:\PROGRA~2\GNUARM~1\102021~1.10\bin\AR19DD~1.EXE $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S C:\PICO\pico-sdk\src\rp2_common\hardware_adc\adc.c -o CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_adc\adc.c.s
+
 # Object files for target orchestra
 orchestra_OBJECTS = \
 "CMakeFiles\orchestra.dir\orchestra.cpp.obj" \
@@ -738,7 +752,8 @@ orchestra_OBJECTS = \
 "CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_standard_link\new_delete.cpp.obj" \
 "CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_standard_link\binary_info.c.obj" \
 "CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_stdio\stdio.c.obj" \
-"CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_stdio_uart\stdio_uart.c.obj"
+"CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_stdio_uart\stdio_uart.c.obj" \
+"CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_adc\adc.c.obj"
 
 # External object files for target orchestra
 orchestra_EXTERNAL_OBJECTS =
@@ -789,9 +804,10 @@ orchestra.elf: CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_sta
 orchestra.elf: CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_standard_link\binary_info.c.obj
 orchestra.elf: CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_stdio\stdio.c.obj
 orchestra.elf: CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_stdio_uart\stdio_uart.c.obj
+orchestra.elf: CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_adc\adc.c.obj
 orchestra.elf: CMakeFiles\orchestra.dir\build.make
 orchestra.elf: pico-sdk\src\rp2_common\boot_stage2\bs2_default_padded_checksummed.S
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=C:\PICO\orchestra\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_47) "Linking CXX executable orchestra.elf"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=C:\PICO\orchestra\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_48) "Linking CXX executable orchestra.elf"
 	C:\PROGRA~2\GNUARM~1\102021~1.10\bin\AR10B2~1.EXE -mcpu=cortex-m0plus -mthumb -Og -g -Wl,--build-id=none --specs=nosys.specs -Wl,--wrap=sprintf -Wl,--wrap=snprintf -Wl,--wrap=vsnprintf -Wl,--wrap=__clzsi2 -Wl,--wrap=__clzdi2 -Wl,--wrap=__ctzsi2 -Wl,--wrap=__ctzdi2 -Wl,--wrap=__popcountsi2 -Wl,--wrap=__popcountdi2 -Wl,--wrap=__clz -Wl,--wrap=__clzl -Wl,--wrap=__clzll -Wl,--wrap=__aeabi_idiv -Wl,--wrap=__aeabi_idivmod -Wl,--wrap=__aeabi_ldivmod -Wl,--wrap=__aeabi_uidiv -Wl,--wrap=__aeabi_uidivmod -Wl,--wrap=__aeabi_uldivmod -Wl,--wrap=__aeabi_dadd -Wl,--wrap=__aeabi_ddiv -Wl,--wrap=__aeabi_dmul -Wl,--wrap=__aeabi_drsub -Wl,--wrap=__aeabi_dsub -Wl,--wrap=__aeabi_cdcmpeq -Wl,--wrap=__aeabi_cdrcmple -Wl,--wrap=__aeabi_cdcmple -Wl,--wrap=__aeabi_dcmpeq -Wl,--wrap=__aeabi_dcmplt -Wl,--wrap=__aeabi_dcmple -Wl,--wrap=__aeabi_dcmpge -Wl,--wrap=__aeabi_dcmpgt -Wl,--wrap=__aeabi_dcmpun -Wl,--wrap=__aeabi_i2d -Wl,--wrap=__aeabi_l2d -Wl,--wrap=__aeabi_ui2d -Wl,--wrap=__aeabi_ul2d -Wl,--wrap=__aeabi_d2iz -Wl,--wrap=__aeabi_d2lz -Wl,--wrap=__aeabi_d2uiz -Wl,--wrap=__aeabi_d2ulz -Wl,--wrap=__aeabi_d2f -Wl,--wrap=sqrt -Wl,--wrap=cos -Wl,--wrap=sin -Wl,--wrap=tan -Wl,--wrap=atan2 -Wl,--wrap=exp -Wl,--wrap=log -Wl,--wrap=ldexp -Wl,--wrap=copysign -Wl,--wrap=trunc -Wl,--wrap=floor -Wl,--wrap=ceil -Wl,--wrap=round -Wl,--wrap=sincos -Wl,--wrap=asin -Wl,--wrap=acos -Wl,--wrap=atan -Wl,--wrap=sinh -Wl,--wrap=cosh -Wl,--wrap=tanh -Wl,--wrap=asinh -Wl,--wrap=acosh -Wl,--wrap=atanh -Wl,--wrap=exp2 -Wl,--wrap=log2 -Wl,--wrap=exp10 -Wl,--wrap=log10 -Wl,--wrap=pow -Wl,--wrap=powint -Wl,--wrap=hypot -Wl,--wrap=cbrt -Wl,--wrap=fmod -Wl,--wrap=drem -Wl,--wrap=remainder -Wl,--wrap=remquo -Wl,--wrap=expm1 -Wl,--wrap=log1p -Wl,--wrap=fma -Wl,--wrap=__aeabi_lmul -Wl,--wrap=__aeabi_fadd -Wl,--wrap=__aeabi_fdiv -Wl,--wrap=__aeabi_fmul -Wl,--wrap=__aeabi_frsub -Wl,--wrap=__aeabi_fsub -Wl,--wrap=__aeabi_cfcmpeq -Wl,--wrap=__aeabi_cfrcmple -Wl,--wrap=__aeabi_cfcmple -Wl,--wrap=__aeabi_fcmpeq -Wl,--wrap=__aeabi_fcmplt -Wl,--wrap=__aeabi_fcmple -Wl,--wrap=__aeabi_fcmpge -Wl,--wrap=__aeabi_fcmpgt -Wl,--wrap=__aeabi_fcmpun -Wl,--wrap=__aeabi_i2f -Wl,--wrap=__aeabi_l2f -Wl,--wrap=__aeabi_ui2f -Wl,--wrap=__aeabi_ul2f -Wl,--wrap=__aeabi_f2iz -Wl,--wrap=__aeabi_f2lz -Wl,--wrap=__aeabi_f2uiz -Wl,--wrap=__aeabi_f2ulz -Wl,--wrap=__aeabi_f2d -Wl,--wrap=sqrtf -Wl,--wrap=cosf -Wl,--wrap=sinf -Wl,--wrap=tanf -Wl,--wrap=atan2f -Wl,--wrap=expf -Wl,--wrap=logf -Wl,--wrap=ldexpf -Wl,--wrap=copysignf -Wl,--wrap=truncf -Wl,--wrap=floorf -Wl,--wrap=ceilf -Wl,--wrap=roundf -Wl,--wrap=sincosf -Wl,--wrap=asinf -Wl,--wrap=acosf -Wl,--wrap=atanf -Wl,--wrap=sinhf -Wl,--wrap=coshf -Wl,--wrap=tanhf -Wl,--wrap=asinhf -Wl,--wrap=acoshf -Wl,--wrap=atanhf -Wl,--wrap=exp2f -Wl,--wrap=log2f -Wl,--wrap=exp10f -Wl,--wrap=log10f -Wl,--wrap=powf -Wl,--wrap=powintf -Wl,--wrap=hypotf -Wl,--wrap=cbrtf -Wl,--wrap=fmodf -Wl,--wrap=dremf -Wl,--wrap=remainderf -Wl,--wrap=remquof -Wl,--wrap=expm1f -Wl,--wrap=log1pf -Wl,--wrap=fmaf -Wl,--wrap=malloc -Wl,--wrap=calloc -Wl,--wrap=free -Wl,--wrap=memcpy -Wl,--wrap=memset -Wl,--wrap=__aeabi_memcpy -Wl,--wrap=__aeabi_memset -Wl,--wrap=__aeabi_memcpy4 -Wl,--wrap=__aeabi_memset4 -Wl,--wrap=__aeabi_memcpy8 -Wl,--wrap=__aeabi_memset8 -Wl,-Map=orchestra.elf.map -Wl,--script=C:/PICO/pico-sdk/src/rp2_common/pico_standard_link/memmap_default.ld -Wl,-z,max-page-size=4096 -Wl,--gc-sections -Wl,--wrap=printf -Wl,--wrap=vprintf -Wl,--wrap=puts -Wl,--wrap=putchar -Wl,--wrap=getchar $(orchestra_OBJECTS) $(orchestra_EXTERNAL_OBJECTS) -o orchestra.elf  pico-sdk\src\rp2_common\boot_stage2\bs2_default_padded_checksummed.S 
 	echo >nul && "C:\Program Files (x86)\GNU Arm Embedded Toolchain\10 2021.10\bin\arm-none-eabi-objcopy.exe" -Oihex C:/PICO/orchestra/build/orchestra.elf orchestra.hex
 	echo >nul && "C:\Program Files (x86)\GNU Arm Embedded Toolchain\10 2021.10\bin\arm-none-eabi-objcopy.exe" -Obinary C:/PICO/orchestra/build/orchestra.elf orchestra.bin

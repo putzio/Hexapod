@@ -1,5 +1,34 @@
 CMakeFiles\orchestra.dir\orchestra.cpp.obj: \
  C:\PICO\orchestra\orchestra.cpp \
+ c:\progra~2\gnuarm~1\102021~1.10\arm-none-eabi\include\stdio.h \
+ c:\progra~2\gnuarm~1\102021~1.10\arm-none-eabi\include\_ansi.h \
+ c:\progra~2\gnuarm~1\102021~1.10\arm-none-eabi\include\newlib.h \
+ c:\progra~2\gnuarm~1\102021~1.10\arm-none-eabi\include\_newlib_version.h \
+ c:\progra~2\gnuarm~1\102021~1.10\arm-none-eabi\include\sys\config.h \
+ c:\progra~2\gnuarm~1\102021~1.10\arm-none-eabi\include\machine\ieeefp.h \
+ c:\progra~2\gnuarm~1\102021~1.10\arm-none-eabi\include\sys\features.h \
+ c:\progra~2\gnuarm~1\102021~1.10\arm-none-eabi\include\sys\cdefs.h \
+ c:\progra~2\gnuarm~1\102021~1.10\arm-none-eabi\include\machine\_default_types.h \
+ c:\progra~2\gnuarm~1\102021~1.10\lib\gcc\arm-none-eabi\10.3.1\include\stddef.h \
+ c:\progra~2\gnuarm~1\102021~1.10\lib\gcc\arm-none-eabi\10.3.1\include\stdarg.h \
+ c:\progra~2\gnuarm~1\102021~1.10\arm-none-eabi\include\sys\reent.h \
+ c:\progra~2\gnuarm~1\102021~1.10\arm-none-eabi\include\_ansi.h \
+ c:\progra~2\gnuarm~1\102021~1.10\arm-none-eabi\include\sys\_types.h \
+ c:\progra~2\gnuarm~1\102021~1.10\arm-none-eabi\include\machine\_types.h \
+ c:\progra~2\gnuarm~1\102021~1.10\arm-none-eabi\include\sys\lock.h \
+ c:\progra~2\gnuarm~1\102021~1.10\arm-none-eabi\include\sys\types.h \
+ c:\progra~2\gnuarm~1\102021~1.10\arm-none-eabi\include\sys\_stdint.h \
+ c:\progra~2\gnuarm~1\102021~1.10\arm-none-eabi\include\machine\endian.h \
+ c:\progra~2\gnuarm~1\102021~1.10\arm-none-eabi\include\machine\_endian.h \
+ c:\progra~2\gnuarm~1\102021~1.10\arm-none-eabi\include\sys\select.h \
+ c:\progra~2\gnuarm~1\102021~1.10\arm-none-eabi\include\sys\_sigset.h \
+ c:\progra~2\gnuarm~1\102021~1.10\arm-none-eabi\include\sys\_timeval.h \
+ c:\progra~2\gnuarm~1\102021~1.10\arm-none-eabi\include\sys\timespec.h \
+ c:\progra~2\gnuarm~1\102021~1.10\arm-none-eabi\include\sys\_timespec.h \
+ c:\progra~2\gnuarm~1\102021~1.10\arm-none-eabi\include\sys\_pthreadtypes.h \
+ c:\progra~2\gnuarm~1\102021~1.10\arm-none-eabi\include\sys\sched.h \
+ c:\progra~2\gnuarm~1\102021~1.10\arm-none-eabi\include\machine\types.h \
+ c:\progra~2\gnuarm~1\102021~1.10\arm-none-eabi\include\sys\stdio.h \
  C:\PICO\pico-sdk\src\common\pico_stdlib\include/pico/stdlib.h \
  C:\PICO\pico-sdk\src\common\pico_base\include/pico.h \
  C:\PICO\pico-sdk\src\common\pico_base\include/pico/types.h \
@@ -10,18 +39,9 @@ CMakeFiles\orchestra.dir\orchestra.cpp.obj: \
  c:\progra~2\gnuarm~1\102021~1.10\arm-none-eabi\include\c++\10.3.1\arm-none-eabi\thumb\v6-m\nofp\bits\os_defines.h \
  c:\progra~2\gnuarm~1\102021~1.10\arm-none-eabi\include\c++\10.3.1\arm-none-eabi\thumb\v6-m\nofp\bits\cpu_defines.h \
  c:\progra~2\gnuarm~1\102021~1.10\arm-none-eabi\include\assert.h \
- c:\progra~2\gnuarm~1\102021~1.10\arm-none-eabi\include\_ansi.h \
- c:\progra~2\gnuarm~1\102021~1.10\arm-none-eabi\include\newlib.h \
- c:\progra~2\gnuarm~1\102021~1.10\arm-none-eabi\include\_newlib_version.h \
- c:\progra~2\gnuarm~1\102021~1.10\arm-none-eabi\include\sys\config.h \
- c:\progra~2\gnuarm~1\102021~1.10\arm-none-eabi\include\machine\ieeefp.h \
- c:\progra~2\gnuarm~1\102021~1.10\arm-none-eabi\include\sys\features.h \
  c:\progra~2\gnuarm~1\102021~1.10\lib\gcc\arm-none-eabi\10.3.1\include\stdint.h \
  c:\progra~2\gnuarm~1\102021~1.10\arm-none-eabi\include\stdint.h \
- c:\progra~2\gnuarm~1\102021~1.10\arm-none-eabi\include\machine\_default_types.h \
  c:\progra~2\gnuarm~1\102021~1.10\arm-none-eabi\include\sys\_intsup.h \
- c:\progra~2\gnuarm~1\102021~1.10\arm-none-eabi\include\sys\_stdint.h \
- c:\progra~2\gnuarm~1\102021~1.10\lib\gcc\arm-none-eabi\10.3.1\include\stddef.h \
  C:\PICO\orchestra\build\generated\pico_base/pico/version.h \
  C:\PICO\pico-sdk\src\common\pico_base\include/pico/config.h \
  C:\PICO\orchestra\build\generated\pico_base/pico/config_autogen.h \
@@ -29,7 +49,6 @@ CMakeFiles\orchestra.dir\orchestra.cpp.obj: \
  C:/PICO/pico-sdk/src/rp2_common/cmsis/include/cmsis/rename_exceptions.h \
  C:\PICO\pico-sdk\src\rp2_common\pico_platform\include/pico/platform.h \
  C:\PICO\pico-sdk\src\rp2040\hardware_regs\include/hardware/platform_defs.h \
- c:\progra~2\gnuarm~1\102021~1.10\arm-none-eabi\include\sys\cdefs.h \
  C:\PICO\pico-sdk\src\common\pico_base\include/pico/types.h \
  C:\PICO\pico-sdk\src\common\pico_base\include/pico/error.h \
  C:\PICO\pico-sdk\src\rp2_common\pico_stdio\include/pico/stdio.h \
@@ -59,11 +78,6 @@ CMakeFiles\orchestra.dir\orchestra.cpp.obj: \
  c:\progra~2\gnuarm~1\102021~1.10\arm-none-eabi\include\c++\10.3.1\bits\cpp_type_traits.h \
  c:\progra~2\gnuarm~1\102021~1.10\arm-none-eabi\include\c++\10.3.1\ext\type_traits.h \
  c:\progra~2\gnuarm~1\102021~1.10\arm-none-eabi\include\math.h \
- c:\progra~2\gnuarm~1\102021~1.10\arm-none-eabi\include\sys\reent.h \
- c:\progra~2\gnuarm~1\102021~1.10\arm-none-eabi\include\_ansi.h \
- c:\progra~2\gnuarm~1\102021~1.10\arm-none-eabi\include\sys\_types.h \
- c:\progra~2\gnuarm~1\102021~1.10\arm-none-eabi\include\machine\_types.h \
- c:\progra~2\gnuarm~1\102021~1.10\arm-none-eabi\include\sys\lock.h \
  c:\progra~2\gnuarm~1\102021~1.10\arm-none-eabi\include\c++\10.3.1\bits\std_abs.h \
  c:\progra~2\gnuarm~1\102021~1.10\arm-none-eabi\include\stdlib.h \
  c:\progra~2\gnuarm~1\102021~1.10\arm-none-eabi\include\machine\stdlib.h \
@@ -71,4 +85,10 @@ CMakeFiles\orchestra.dir\orchestra.cpp.obj: \
  C:\PICO\pico-sdk\src\rp2_common\pico_bootrom\include/pico/bootrom/sf_table.h \
  C:\PICO\pico-sdk\src\rp2_common\hardware_clocks\include/hardware/clocks.h \
  C:\PICO\pico-sdk\src\rp2040\hardware_structs\include/hardware/structs/clocks.h \
- C:\PICO\pico-sdk\src\rp2040\hardware_regs\include/hardware/regs/clocks.h
+ C:\PICO\pico-sdk\src\rp2040\hardware_regs\include/hardware/regs/clocks.h \
+ C:\PICO\pico-sdk\src\rp2_common\hardware_irq\include/hardware/irq.h \
+ C:\PICO\pico-sdk\src\rp2040\hardware_regs\include/hardware/regs/intctrl.h \
+ C:\PICO\pico-sdk\src\rp2040\hardware_regs\include/hardware/regs/m0plus.h \
+ C:\PICO\pico-sdk\src\rp2_common\hardware_adc\include/hardware/adc.h \
+ C:\PICO\pico-sdk\src\rp2040\hardware_structs\include/hardware/structs/adc.h \
+ C:\PICO\pico-sdk\src\rp2040\hardware_regs\include/hardware/regs/adc.h

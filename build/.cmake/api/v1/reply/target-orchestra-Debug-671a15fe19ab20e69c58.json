@@ -47,7 +47,7 @@
 			{
 				"command" : 5,
 				"file" : 0,
-				"line" : 22,
+				"line" : 24,
 				"parent" : 0
 			},
 			{
@@ -97,6 +97,12 @@
 				"command" : 1,
 				"file" : 0,
 				"line" : 16,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 21,
 				"parent" : 0
 			}
 		]
@@ -442,6 +448,10 @@
 				{
 					"backtrace" : 12,
 					"path" : "C:/PICO/pico-sdk/src/rp2_common/hardware_pwm/include"
+				},
+				{
+					"backtrace" : 13,
+					"path" : "C:/PICO/pico-sdk/src/rp2_common/hardware_adc/include"
 				}
 			],
 			"language" : "CXX",
@@ -774,6 +784,10 @@
 				{
 					"backtrace" : 12,
 					"path" : "C:/PICO/pico-sdk/src/rp2_common/hardware_pwm/include"
+				},
+				{
+					"backtrace" : 13,
+					"path" : "C:/PICO/pico-sdk/src/rp2_common/hardware_adc/include"
 				}
 			],
 			"language" : "C",
@@ -811,7 +825,8 @@
 				39,
 				43,
 				44,
-				45
+				45,
+				46
 			]
 		},
 		{
@@ -1137,6 +1152,10 @@
 				{
 					"backtrace" : 12,
 					"path" : "C:/PICO/pico-sdk/src/rp2_common/hardware_pwm/include"
+				},
+				{
+					"backtrace" : 13,
+					"path" : "C:/PICO/pico-sdk/src/rp2_common/hardware_adc/include"
 				}
 			],
 			"language" : "ASM",
@@ -2044,7 +2063,8 @@
 				42,
 				43,
 				44,
-				45
+				45,
+				46
 			]
 		},
 		{
@@ -2341,6 +2361,12 @@
 			"backtrace" : 2,
 			"compileGroupIndex" : 1,
 			"path" : "C:/PICO/pico-sdk/src/rp2_common/pico_stdio_uart/stdio_uart.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 13,
+			"compileGroupIndex" : 1,
+			"path" : "C:/PICO/pico-sdk/src/rp2_common/hardware_adc/adc.c",
 			"sourceGroupIndex" : 0
 		}
 	],

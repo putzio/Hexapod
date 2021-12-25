@@ -103,6 +103,7 @@ set(CMAKE_ASM_TARGET_INCLUDE_PATH
   "C:/PICO/pico-sdk/src/rp2_common/pico_stdio/include"
   "C:/PICO/pico-sdk/src/rp2_common/pico_stdio_uart/include"
   "C:/PICO/pico-sdk/src/rp2_common/hardware_pwm/include"
+  "C:/PICO/pico-sdk/src/rp2_common/hardware_adc/include"
   )
 
 # The set of dependency files which are needed:
@@ -116,6 +117,7 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "C:/PICO/pico-sdk/src/common/pico_util/datetime.c" "CMakeFiles/orchestra.dir/C_/PICO/pico-sdk/src/common/pico_util/datetime.c.obj" "gcc" "CMakeFiles/orchestra.dir/C_/PICO/pico-sdk/src/common/pico_util/datetime.c.obj.d"
   "C:/PICO/pico-sdk/src/common/pico_util/pheap.c" "CMakeFiles/orchestra.dir/C_/PICO/pico-sdk/src/common/pico_util/pheap.c.obj" "gcc" "CMakeFiles/orchestra.dir/C_/PICO/pico-sdk/src/common/pico_util/pheap.c.obj.d"
   "C:/PICO/pico-sdk/src/common/pico_util/queue.c" "CMakeFiles/orchestra.dir/C_/PICO/pico-sdk/src/common/pico_util/queue.c.obj" "gcc" "CMakeFiles/orchestra.dir/C_/PICO/pico-sdk/src/common/pico_util/queue.c.obj.d"
+  "C:/PICO/pico-sdk/src/rp2_common/hardware_adc/adc.c" "CMakeFiles/orchestra.dir/C_/PICO/pico-sdk/src/rp2_common/hardware_adc/adc.c.obj" "gcc" "CMakeFiles/orchestra.dir/C_/PICO/pico-sdk/src/rp2_common/hardware_adc/adc.c.obj.d"
   "C:/PICO/pico-sdk/src/rp2_common/hardware_claim/claim.c" "CMakeFiles/orchestra.dir/C_/PICO/pico-sdk/src/rp2_common/hardware_claim/claim.c.obj" "gcc" "CMakeFiles/orchestra.dir/C_/PICO/pico-sdk/src/rp2_common/hardware_claim/claim.c.obj.d"
   "C:/PICO/pico-sdk/src/rp2_common/hardware_clocks/clocks.c" "CMakeFiles/orchestra.dir/C_/PICO/pico-sdk/src/rp2_common/hardware_clocks/clocks.c.obj" "gcc" "CMakeFiles/orchestra.dir/C_/PICO/pico-sdk/src/rp2_common/hardware_clocks/clocks.c.obj.d"
   "C:/PICO/pico-sdk/src/rp2_common/hardware_gpio/gpio.c" "CMakeFiles/orchestra.dir/C_/PICO/pico-sdk/src/rp2_common/hardware_gpio/gpio.c.obj" "gcc" "CMakeFiles/orchestra.dir/C_/PICO/pico-sdk/src/rp2_common/hardware_gpio/gpio.c.obj.d"
