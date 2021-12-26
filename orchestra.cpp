@@ -33,6 +33,15 @@
 #define LED_PIN 15
 #define msServoMin 550//time in microseconds for 0 degrees
 #define msServoMax 2400//time in microseconds for 180 degrees
+#define CYCLE_TIME
+
+#define ACCELLERATION_PER_S 50.0
+#define ACCELERATION 0.2//ACCELERATION_PER_S*CYCLE_TIME *(msServoMax - msServoMin)/180
+#define DECCELERATION 1
+#define MAX_VELOCITY 20 //20/(2400-550)/0.02 = 97*/s //in datasheet max speed -> 60*/0.1s = 600*/s
+#define MIN_VELOCITY 1
+#define DISTANCE_DECCELERATION  200
+
 enum State
     {
         Stop,
@@ -175,6 +184,9 @@ void on_uart_rx() {
     
     while (uart_is_readable(UART_ID)) {
         char mode = uart_getc(UART_ID);
+        uart_puts(uart0, "Recieved:\n");
+        uart_putc(uart0,mode);
+        uart_puts(uart0, "\n");
         switch (mode)
         {
         case 'f':
@@ -261,7 +273,8 @@ class Servo{
     bool left = false;
     uint slice_num;//defined in ServoInit()
     volatile uint16_t msPosition;//calculated from position in the write() function    
-    
+    float velocity = MIN_VELOCITY;
+
     uint16_t CalculateLeft(uint16_t pos)
     {
         int pos90 = map(90,0,180,msServoMin,msServoMax);
@@ -309,14 +322,16 @@ class Servo{
     }
     void GoToPosition()
     {
+        CalculateVelocity();
         if(!done)
         {
             // this->currentPosition+=((this->currentPosition-this->msPosition)/300);                       
-            if(this->currentPosition-this->msPosition > 0)
-                this->currentPosition-=5;
+            if(this->currentPosition > this->msPosition)
+                this->currentPosition-=this->velocity;
             else
-                this->currentPosition+=5;
-            if(currentPosition-this->msPosition<5 && currentPosition-this->msPosition>-5)
+                this->currentPosition+=this->velocity;
+            if(currentPosition - msPosition < velocity && 
+               currentPosition - msPosition > -velocity)
                 this->currentPosition = this->msPosition; 
             //Move servo
             if(left)
@@ -327,7 +342,24 @@ class Servo{
             if(this->currentPosition==this->msPosition)
                 done = true;
         }        
-        gpio_put(LED_PIN,done);
+    }
+    void CalculateVelocity()
+    {
+        if(currentPosition - msPosition < DISTANCE_DECCELERATION && 
+            currentPosition - msPosition > - DISTANCE_DECCELERATION )
+        {
+            //deccelerate
+            velocity -= DECCELERATION; 
+        }
+        else
+        {
+            //accelerate
+            velocity +=ACCELERATION;
+        }
+        if(velocity<MIN_VELOCITY)
+            velocity = MIN_VELOCITY;
+        if(velocity>MAX_VELOCITY)
+            velocity = MAX_VELOCITY;
     }
     void ChangePosition(uint8_t pos)
     {
@@ -401,7 +433,7 @@ class Leg
         slave.SlavePosition(master.Calculate(90));
         slave.enable();
     }
-    public: Leg(int pinMaster = 2, int pinSlave = false, bool leftLeg = false)
+    public: Leg(int pinMaster = 2, int pinSlave = 3, bool leftLeg = false)
     {
         master = Servo(pinMaster, leftLeg);
         slave = Servo(pinSlave, leftLeg);
@@ -498,12 +530,13 @@ class Body
     uint8_t legTeam2[3] = {1,2,5};   
     State movingStates[ARRAY_SIZE(forwardStates)];
     State moveType = Stop;
-    int state = 0;
+    int step = 0;
     Body(uint8_t masterPins[6], uint8_t slavePins[6])
     {
         for(int i = 0; i< 6; i++)
         {
             legs[i] = Leg(masterPins[i],slavePins[i],i%2 == 1);
+            legs[i].writeMaster(90,true);
         }        
     }
 
@@ -514,7 +547,7 @@ class Body
             movingStates[i] = forwardStates [i];
         }
         moveType = Forward;
-        state = 1;
+        step = 1;
     }
     void ChangeToBack()
     {
@@ -523,7 +556,7 @@ class Body
             movingStates[i] = backStates [i];
         }
         moveType = Back;
-        state = 1;
+        step = 1;
     }
     void ChangeToLeft()
     {
@@ -532,7 +565,7 @@ class Body
             movingStates[i] = leftStates [i];
         }
         moveType = Left;
-        state = 1;
+        step = 1;
     }
     void ChangeToRight()
     {
@@ -541,11 +574,11 @@ class Body
             movingStates[i] = rightStates [i];
         }
         moveType = Right;
-        state = 1;
+        step = 1;
     }
     void ChangeToStop()
     {
-        state = 0;
+        step = 0;
         moveType = Stop;
     }
     void ChangeToReset()
@@ -555,11 +588,11 @@ class Body
             movingStates[i] = resetStates [i];
         }
         moveType = Reset;
-        state = 1;
+        step = 1;
     }
     void ResetPositionMove()
     {
-        switch(movingStates[state])
+        switch(movingStates[step])
         {
             case Stop:
 
@@ -572,13 +605,13 @@ class Body
                 {
                     legs[i].ChooseMove(Back, false);
                 }
-                state++;
+                step++;
                 break;
             }
             case BackLoop:
             {
                 if(MovesDone())
-                    state++;
+                    step++;
                 break;
             }
             case Down1:
@@ -588,13 +621,13 @@ class Body
                 {
                     legs[i].ChooseMove(Down, false);
                 }
-                state++;
+                step++;
                 break;
             }
             case DownLoop1:
             {
                 if(MovesDone())
-                    state=0;
+                    step=0;
                 break;
             }   
             
@@ -604,7 +637,7 @@ class Body
     }
     void Move()
     {        
-        switch(movingStates[state])
+        switch(movingStates[step])
         {
             case Stop:
             {
@@ -616,7 +649,7 @@ class Body
                 for(int i = 0; i< ARRAY_SIZE(legs);i++)
                     legs[i].GoToPosition();
                 if(MovesDone())
-                    state = 0;
+                    step = 0;
             }
             case Forward:
             {
@@ -626,7 +659,7 @@ class Body
                     legs[legTeam1[i]].ChooseMove(Forward, back);//Forward => false
                     legs[legTeam2[i]].ChooseMove(Back, !back);//Forward => true
                 }
-                state++;
+                step++;
                 break;
             }
             case ForwardLoop:
@@ -634,7 +667,7 @@ class Body
                 for(int i = 0; i< ARRAY_SIZE(legs);i++)
                     legs[i].GoToPosition();
                 if(MovesDone())
-                    state++;         
+                    step++;         
                 break;
             }
             case Down1:
@@ -643,7 +676,7 @@ class Body
                 {
                     legs[legTeam1[i]].ChooseMove(Down, false);
                 }
-                state++;
+                step++;
                 break;
             }
             case DownLoop1:
@@ -651,7 +684,7 @@ class Body
                 for(int i = 0; i< ARRAY_SIZE(legs);i++)
                     legs[i].GoToPositionSlave();
                 if(MovesDone())
-                    state++;        
+                    step++;        
                 break;
             }
             case Down2:
@@ -660,7 +693,7 @@ class Body
                 {
                     legs[legTeam2[i]].ChooseMove(Up, false);
                 }
-                state++;
+                step++;
                 break;
             }
             case DownLoop2:
@@ -668,7 +701,7 @@ class Body
                 for(int i = 0; i< ARRAY_SIZE(legs);i++)
                     legs[i].GoToPositionSlave();
                 if(MovesDone())
-                    state++;        
+                    step++;        
                 break;
             }
             case Back:
@@ -679,7 +712,7 @@ class Body
                     legs[legTeam1[i]].ChooseMove(Back, forward);//Forward => true
                     legs[legTeam2[i]].ChooseMove(Forward, !forward);//Forward => false
                 }
-                state++;
+                step++;
                 break;
             }
             case BackLoop:
@@ -687,7 +720,7 @@ class Body
                 for(int i = 0; i< ARRAY_SIZE(legs);i++)
                     legs[i].GoToPosition();
                 if(MovesDone())
-                    state++;        
+                    step++;        
                 break;
             }
             case Up1:
@@ -696,7 +729,7 @@ class Body
                 {
                     legs[legTeam2[i]].ChooseMove(Down, false);
                 }
-                state++;
+                step++;
                 break;
             }
             case UpLoop1:
@@ -704,7 +737,7 @@ class Body
                 for(int i = 0; i< ARRAY_SIZE(legs);i++)
                     legs[i].GoToPositionSlave();
                 if(MovesDone())
-                    state++;         
+                    step++;         
                 break;
             }
             case Up2:
@@ -713,7 +746,7 @@ class Body
                 {
                     legs[legTeam1[i]].ChooseMove(Up, false);
                 }
-                state++;
+                step++;
                 break;
             }
             case UpLoop2:
@@ -721,7 +754,7 @@ class Body
                 for(int i = 0; i< ARRAY_SIZE(legs);i++)
                     legs[i].GoToPositionSlave();
                 if(MovesDone())
-                    state++;         
+                    step++;         
                 break;
             }
 
@@ -736,7 +769,7 @@ class Body
                 legs[3].ChooseMove(Back, !right);
                 legs[4].ChooseMove(Forward, !right);
                 legs[5].ChooseMove(Forward, right);
-                state++;
+                step++;
                 break;
             }
             case  Right:
@@ -748,12 +781,12 @@ class Body
                 legs[3].ChooseMove(Forward, right);
                 legs[4].ChooseMove(Back, right);
                 legs[5].ChooseMove(Back, !right);
-                state++;
+                step++;
                 break;
             }
         }
-        if(state >= ARRAY_SIZE(movingStates))
-            state = 1;
+        if(step >= ARRAY_SIZE(movingStates))
+            step = 1;
     }
     bool MovesDone()
     {
@@ -803,61 +836,49 @@ class Body
 };
 int main() 
 {
-    // Servo mServos[2];
-    
-    // mServos[0]= Servo(2,false);
-    // mServos[0].write(90);
-    // mServos[0].enable();
-
-    // mServos[1]= Servo(4,true);
-    // mServos[1].write(90);
-    // mServos[1].enable();
-
-    // while(1)
-    // {
-    //     sleep_ms(1000);
-    // }
     stdio_init_all();
+
+    gpio_init(25);
+    gpio_set_dir(25, GPIO_OUT);
+
+    gpio_put(25,1);
+    sleep_ms(500);
     UART_INIT(9600);
     uart_puts(uart0, "Hello world!\n");
+
+    gpio_put(25,0);
+    sleep_ms(500);
     
     ADC_INIT();
     MeasureBattery();
     
-    // Servo mServos[6];
-    // Servo sServos[ARRAY_SIZE(mServos)];
-    // Leg legs[ARRAY_SIZE(mServos)];
+    gpio_put(25,1);
+    sleep_ms(500);
+
     uint8_t mser[6],sser[6];
     for(int i = 0; i < ARRAY_SIZE(mser); i++)
     {
-        // mServos[i] = Servo(2*i);
-        // mServos[i].write(90);
-        // mServos[i].enable();
-        // sServos[i] = Servo(2*i + 1);
-        // sServos[i].enableSlave = true;
-        // sServos[i].SlavePosition(90);
-        // sServos[i].enable();
-        // legs[i].initLeg(2*i,2*i + 1);
         mser[i] = 2*(i + 1);//(i+1) because we start at gpio 2
         sser[i] = 2*(i + 1) + 1;
     }
-    // uart_puts(uart0, "1\n");
     sleep_ms(2000);
+    
+    gpio_put(25,0);
+    sleep_ms(500);
+
     Body body(mser,sser);
-    // uart_puts(uart0, "2\n");
-    // sleep_ms(2000);
+    state = Forward;
     body.StateChanged(state);
     
     gpio_init(16);
-    gpio_init(25);
-    gpio_set_dir(LED_PIN, GPIO_OUT);
-    gpio_set_dir(25, GPIO_OUT);
-    // uart_puts(uart0, "3\n");
+    gpio_put(25,1);
+    sleep_ms(500);
     while(1)
     {
-        // gpio_put(LED_PIN,1);
-        if(!enableProgram)
-            gpio_put(25,1);
+        // uart_puts(uart0, "Recieved:\n");
+        // uart_putc(uart0,body.step + 48);
+        // uart_puts(uart0, "\n");
+        gpio_put(25,1);
         gpio_put(16,1);
         
         do
@@ -866,6 +887,7 @@ int main()
             sleep_ms(20); 
         }
         while(!body.MovesDone());
+
         gpio_put(25,0);
         gpio_put(16,0);
         // enableProgram = MeasureBattery();
@@ -873,7 +895,7 @@ int main()
         {
             body.StateChanged(state);
         }
-        sleep_ms(100);
+        sleep_ms(500);
 
     }
 }
