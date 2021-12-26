@@ -36,10 +36,11 @@
 #define CYCLE_TIME
 
 #define ACCELLERATION_PER_S 50.0
-#define ACCELERATION 0.5//ACCELERATION_PER_S*CYCLE_TIME *(msServoMax - msServoMin)/180
-#define DECCELERATION 2
+#define ACCELERATION 0.2//ACCELERATION_PER_S*CYCLE_TIME *(msServoMax - msServoMin)/180
+#define DECCELERATION 1
 #define MAX_VELOCITY 20 //20/(2400-550)/0.02 = 97*/s //in datasheet max speed -> 60*/0.1s = 600*/s
-#define MIN_VELOCITY 2
+#define MIN_VELOCITY 1
+#define DISTANCE_DECCELERATION  200
 
 enum State
     {
@@ -272,7 +273,7 @@ class Servo{
     bool left = false;
     uint slice_num;//defined in ServoInit()
     volatile uint16_t msPosition;//calculated from position in the write() function    
-    uint8_t velocity = MIN_VELOCITY;
+    float velocity = MIN_VELOCITY;
 
     uint16_t CalculateLeft(uint16_t pos)
     {
@@ -344,8 +345,8 @@ class Servo{
     }
     void CalculateVelocity()
     {
-        if(currentPosition - msPosition < 100 && 
-            currentPosition - msPosition > -100 )
+        if(currentPosition - msPosition < DISTANCE_DECCELERATION && 
+            currentPosition - msPosition > - DISTANCE_DECCELERATION )
         {
             //deccelerate
             velocity -= DECCELERATION; 
@@ -432,7 +433,7 @@ class Leg
         slave.SlavePosition(master.Calculate(90));
         slave.enable();
     }
-    public: Leg(int pinMaster = 2, int pinSlave = false, bool leftLeg = false)
+    public: Leg(int pinMaster = 2, int pinSlave = 3, bool leftLeg = false)
     {
         master = Servo(pinMaster, leftLeg);
         slave = Servo(pinSlave, leftLeg);
@@ -535,6 +536,7 @@ class Body
         for(int i = 0; i< 6; i++)
         {
             legs[i] = Leg(masterPins[i],slavePins[i],i%2 == 1);
+            legs[i].writeMaster(90,true);
         }        
     }
 
@@ -590,7 +592,7 @@ class Body
     }
     void ResetPositionMove()
     {
-        switch(movingStates[state])
+        switch(movingStates[step])
         {
             case Stop:
 
@@ -635,7 +637,7 @@ class Body
     }
     void Move()
     {        
-        switch(movingStates[state])
+        switch(movingStates[step])
         {
             case Stop:
             {
@@ -873,9 +875,9 @@ int main()
     sleep_ms(500);
     while(1)
     {
-        uart_puts(uart0, "Recieved:\n");
-        uart_putc(uart0,body.step + 48);
-        uart_puts(uart0, "\n");
+        // uart_puts(uart0, "Recieved:\n");
+        // uart_putc(uart0,body.step + 48);
+        // uart_puts(uart0, "\n");
         gpio_put(25,1);
         gpio_put(16,1);
         
@@ -885,7 +887,7 @@ int main()
             sleep_ms(20); 
         }
         while(!body.MovesDone());
-        
+
         gpio_put(25,0);
         gpio_put(16,0);
         // enableProgram = MeasureBattery();
@@ -893,7 +895,7 @@ int main()
         {
             body.StateChanged(state);
         }
-        sleep_ms(100);
+        sleep_ms(500);
 
     }
 }
