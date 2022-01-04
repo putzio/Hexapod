@@ -12,18 +12,13 @@
 #define UART_ID uart0
 #define BAUD_RATE 9600
 
-// We are using pins 0 and 1, but see the GPIO function select table in the
-// datasheet for information on which other pins can be used.
-#define UART_TX_PIN 0
-#define UART_RX_PIN 1
-
 #define ARRAY_SIZE(a) sizeof(a)/sizeof(a[0])
-#define h 1.8
-#define ADC_V 5 *4.7/14.7
-#define MIN_ADC_VALUE ADC_V*(1<<12)/3.3
+#define IS_BETWEEN(x,min,max) (x>min&&x<max)
+#define h 1.7
+
 //pins 
-#define rx 1
-#define tx 0
+#define RX_PIN 1
+#define TX_PIN 0
 //Servos - 2-13
 #define LED_VIN_LOW 26
 #define EN_VIN_CHECK 27
@@ -31,17 +26,29 @@
 #define VIN_CHECK_A_INPUT VIN_CHECK_GPIO-26
 
 #define LED_PIN 15
-#define msServoMin 550//time in microseconds for 0 degrees
-#define msServoMax 2400//time in microseconds for 180 degrees
-#define CYCLE_TIME
 
+//Servo motion parameters
+#define SERVO_MIN_MS 550//time in microseconds for 0 degrees
+#define SERVO_MAX_MS 2400//time in microseconds for 180 degrees
+#define CYCLE_TIME 20 //ms
 #define ACCELLERATION_PER_S 50.0
-#define ACCELERATION 0.2//ACCELERATION_PER_S*CYCLE_TIME *(msServoMax - msServoMin)/180
+#define ACCELERATION 0.2//ACCELERATION_PER_S*CYCLE_TIME *(SERVO_MAX_MS - SERVO_MIN_MS)/180
 #define DECCELERATION 1
 #define MAX_VELOCITY 20 //20/(2400-550)/0.02 = 97*/s //in datasheet max speed -> 60*/0.1s = 600*/s
 #define MIN_VELOCITY 1
 #define DISTANCE_DECCELERATION  200
+#define POS_90_TIME 200 //time for the leg to move to 90* before the next starts to move (to lower the current)
 
+//Measure Battery
+#define RESISTOR_RATIO (147.0/47.0)
+#define RP_VOLTAGE 3.3
+#define ADC_MAX (1<<12)
+#define ADC_V 5 *4.7/14.7
+#define MIN_ADC_VALUE ADC_V*ADC_MAX/RP_VOLTAGE
+#define MASTER_SERVO_MIN_POS 100
+#define MASTER_SERVO_MAX_POS 130
+#define SLAVE_UP_POSITION 0
+//States
 enum State
     {
         Stop,
@@ -61,10 +68,10 @@ enum State
         DownLoop2,
         Left,
         Right,
-        Reset
+        Reset,
+        Pos90
     };
 State state = Stop;
-
 State forwardStates[] = {
     Stop,
     Forward,
@@ -139,13 +146,13 @@ uint16_t map(float x, uint16_t sMin, uint16_t sMax, uint16_t dMin, uint16_t dMax
     }
 void SendFloat(int x){
     // Get battery voltage from ADC result
-    int batteryV = (int)(x * 330 *(147)/47.0/4096.0);
+    int batteryV = (int)(x * 100 * RP_VOLTAGE*RESISTOR_RATIO/(float)ADC_MAX);
     char buff[5];      
-    buff[0] = batteryV/100 + 48;
+    buff[0] = batteryV/100 + '0';
     buff[1] = '.';
     batteryV/=10;
-    buff[2] = batteryV/10 + 48;
-    buff[3] = batteryV%10 + 48;
+    buff[2] = batteryV/10 + '0';
+    buff[3] = batteryV%10 + '0';
     buff[4] = 'V';
     uart_puts(uart0, "\n");
     uart_puts(uart0, "Battery Voltage:\n");
@@ -162,8 +169,8 @@ void UART_INIT(int baud)
     uart_init(uart0, baud);
 
     // Set the GPIO pin mux to the UART - 0 is TX, 1 is RX
-    gpio_set_function(rx, GPIO_FUNC_UART);
-    gpio_set_function(tx, GPIO_FUNC_UART);
+    gpio_set_function(RX_PIN, GPIO_FUNC_UART);
+    gpio_set_function(TX_PIN, GPIO_FUNC_UART);
 
     //interrupts
     // Set up a RX interrupt
@@ -207,6 +214,8 @@ void on_uart_rx() {
         case 'R':
             state = Reset;
             break;
+        case 'P':
+            state = Pos90;
         }
     }
     //----------echo-------------------
@@ -270,14 +279,20 @@ bool MeasureBattery()
 class Servo{
     protected:
     uint8_t pin;//given by the user in the constructor
-    bool left = false;
-    uint slice_num;//defined in ServoInit()
-    volatile uint16_t msPosition;//calculated from position in the write() function    
-    float velocity = MIN_VELOCITY;
+    uint slice_num;//defined in ServoInit() method form the pin variable
+    bool left = false; //if the servo is on the other side it has to move the opposite way -> left = true
+    
+    //msPosition:
+    //calculated from position in the Write() method of destination 
+    //--------OR----- 
+    //Changes value in the ChangePosition() method and then moves servo from currentPosition 
+    //to the changed one by using GoToPosition() method
+    volatile uint16_t msPosition;  
+    float velocity = MIN_VELOCITY;// is changed and calculated in CalculateVelocity() method
 
     uint16_t CalculateLeft(uint16_t pos)
     {
-        int pos90 = map(90,0,180,msServoMin,msServoMax);
+        int pos90 = map(90,0,180,SERVO_MIN_MS,SERVO_MAX_MS);
         //get the distance from 90 degrees
         int distance = pos90 - pos;
         //return another direction
@@ -287,9 +302,9 @@ class Servo{
     {
         // Tell GPIO it is allocated to the PWM
         gpio_set_function(this->pin, GPIO_FUNC_PWM);
-        // Find out which PWM slice is connected to GPIO 0 (it's slice 0)
+        // Find out which PWM slice is connected to GPIO 
         this->slice_num = pwm_gpio_to_slice_num (this->pin);    
-        // Set period of 4 cycles (0 to 3 inclusive)
+        // Set period of 20000 cycles (0 to 20000 inclusive)
         pwm_set_wrap(this->slice_num, 20000);
         //setting period = 20ms
         //set clk div to 38 
@@ -308,8 +323,9 @@ class Servo{
     public:
     bool done = true;
     bool enableSlave = false;
+    bool slaveBack = true;
     volatile float position;//position given by the user
-    int currentPosition = 550;
+    int currentPosition = (SERVO_MIN_MS + SERVO_MAX_MS)/2;
     Servo(uint8_t chosen_pin=0, bool leftServo = false)
     {
         if(chosen_pin<16 && chosen_pin>=2)
@@ -330,14 +346,18 @@ class Servo{
                 this->currentPosition-=this->velocity;
             else
                 this->currentPosition+=this->velocity;
-            if(currentPosition - msPosition < velocity && 
-               currentPosition - msPosition > -velocity)
+            
+            // if(currentPosition - msPosition < velocity && 
+            //    currentPosition - msPosition > -velocity)
+            if(IS_BETWEEN(currentPosition-msPosition,-velocity,velocity))
                 this->currentPosition = this->msPosition; 
+
             //Move servo
             if(left)
                 pwm_set_chan_level(this->slice_num, pwm_gpio_to_channel(this->pin), CalculateLeft(this->currentPosition));
             else
                 pwm_set_chan_level(this->slice_num, pwm_gpio_to_channel(this->pin), this->currentPosition);
+            
             //If the servo has reached the final position move is done            
             if(this->currentPosition==this->msPosition)
                 done = true;
@@ -345,8 +365,9 @@ class Servo{
     }
     void CalculateVelocity()
     {
-        if(currentPosition - msPosition < DISTANCE_DECCELERATION && 
-            currentPosition - msPosition > - DISTANCE_DECCELERATION )
+        // if(currentPosition - msPosition < DISTANCE_DECCELERATION && 
+        //     currentPosition - msPosition > - DISTANCE_DECCELERATION )
+        if(IS_BETWEEN(currentPosition - msPosition,-DISTANCE_DECCELERATION,DISTANCE_DECCELERATION))
         {
             //deccelerate
             velocity -= DECCELERATION; 
@@ -356,6 +377,7 @@ class Servo{
             //accelerate
             velocity +=ACCELERATION;
         }
+
         if(velocity<MIN_VELOCITY)
             velocity = MIN_VELOCITY;
         if(velocity>MAX_VELOCITY)
@@ -363,56 +385,46 @@ class Servo{
     }
     void ChangePosition(uint8_t pos)
     {
-        msPosition = map(pos,0,180,msServoMin,msServoMax);
+        msPosition = map(pos,0,180,SERVO_MIN_MS,SERVO_MAX_MS);
         position = pos;
         done = false;
-        gpio_put(LED_PIN,done);
     }
     void SlavePosition(float pos)
     {
         if(enableSlave)
         {
-            float alfa =  pos - 90;     
-            float rad = 3.1415/180.0;
-            float sinPosNAlfa = (h  - cos((float)alfa * rad));
-            position = asin(sinPosNAlfa)/rad - alfa;
-            float calculatedH = cos(alfa * rad) + sin((position + alfa) * rad);
-            // for(int i = 0; i< 5; i++)    
-            // {
-            //     if((calculatedH < h+0.1 && calculatedH > h - 0.1))
-            //         break;
-            //     sinPosNAlfa = (h  - cos((float)alfa * rad)) + h - calculatedH;
-            //     position = asin(sinPosNAlfa)/rad - alfa;
-            //     calculatedH = cos(alfa * rad) + sin((position + alfa) * rad);
-            // }                 
-            sinPosNAlfa += (h - calculatedH);
-            position = asin(sinPosNAlfa)/rad - alfa;
-            write(position);
+            position = Calculate(pos);
+            Write(position);         
         }        
     }
     
     uint8_t Calculate(int pos)
     {
-        float alfa =  pos - 90;     
+        float alfa =  pos - 90.0;     
+        if(alfa < 0)
+            alfa = - alfa;
         float rad = 3.1415/180.0;
         float sinPosNAlfa = (h  - cos((float)alfa * rad));
-        position = asin(sinPosNAlfa)/rad - alfa;
-        float calculatedH = cos(alfa * rad) + sin((position + alfa) * rad); 
-        sinPosNAlfa += (h - calculatedH);
-        position = asin(sinPosNAlfa)/rad - alfa;           
+        // position = asin(sinPosNAlfa)/rad - alfa;
+        // float calculatedH = cos(alfa * rad) + sin((position + alfa) * rad); 
+        // sinPosNAlfa += (h - calculatedH);
+        if(slaveBack)
+            position = asin(sinPosNAlfa)/rad - alfa;  
+        else 
+            position = 180.0 - asin(sinPosNAlfa)/rad + alfa;
         return position;
     }
-    void write(uint8_t newPosition)
+    void Write(uint8_t newPosition)
     {
         if(newPosition<=180 && newPosition>=0)
-        {
+        {            
             this->position = newPosition;
-            this->msPosition = map(this->position,0,180,msServoMin,msServoMax);
+            this->msPosition = map(this->position,0,180,SERVO_MIN_MS,SERVO_MAX_MS);
             WriteMs();
         }
     }
     
-    void enable()
+    void Enable()
     {
         // Set the PWM running
         pwm_set_enabled(slice_num, true);
@@ -423,28 +435,25 @@ class Leg
 {
     public:
     Servo master , slave;    
-    
-    void initLeg(int pinMaster, int pinSlave, bool leftLeg = false)
+    int maxPos = MASTER_SERVO_MAX_POS;
+    int minPos = MASTER_SERVO_MIN_POS;
+    int upPos = SLAVE_UP_POSITION;
+
+    void initLeg()
     {
-        master = Servo(pinMaster, leftLeg);
-        slave = Servo(pinSlave, leftLeg);
-        master.write(90);
-        master.enable();
+        master.Write(90);
+        master.Enable();
         slave.SlavePosition(master.Calculate(90));
-        slave.enable();
+        slave.Enable();
     }
     public: Leg(int pinMaster = 2, int pinSlave = 3, bool leftLeg = false)
     {
         master = Servo(pinMaster, leftLeg);
         slave = Servo(pinSlave, leftLeg);
-        master.write(90);
-        master.enable();
-        slave.SlavePosition(master.Calculate(90));
-        slave.enable();
     }
-    void writeMaster(int position, bool slaveEnabled)
+    void WriteMaster(int position, bool slaveEnabled)
     {
-        master.write(position);
+        master.Write(position);
         if(slaveEnabled)
         {
             slave.enableSlave = true;
@@ -463,7 +472,7 @@ class Leg
     void GoToPosition()
     {
         master.GoToPosition();
-        slave.SlavePosition(map(master.currentPosition,msServoMin,msServoMax,0,180));
+        slave.SlavePosition(map(master.currentPosition,SERVO_MIN_MS,SERVO_MAX_MS,0.0,180.0));
     }
     void ChangePositionSlave(uint8_t pos)
     {
@@ -473,28 +482,29 @@ class Leg
     {
         slave.GoToPosition();
     }
+    
     void ChooseMove(State s, bool enableSlave)
     {
         switch(s)
         {
             case Forward:
             {
-                ChangePosition(110,enableSlave);
+                ChangePosition(maxPos,enableSlave);
                 break;
             }
             case Down:
             {
-                ChangePositionSlave(slave.Calculate(master.position));
+                ChangePositionSlave(slave.Calculate(master.position));//
                 break;
             }
             case Back:
             {
-                ChangePosition(90,enableSlave);
+                ChangePosition(minPos,enableSlave);
                 break;
             }
             case Up:
             {
-                ChangePositionSlave(0);
+                ChangePositionSlave(upPos);//
                 break;
             }            
         }            
@@ -533,11 +543,24 @@ class Body
     int step = 0;
     Body(uint8_t masterPins[6], uint8_t slavePins[6])
     {
-        for(int i = 0; i< 6; i++)
+        for(int i = 0; i < ARRAY_SIZE(legs); i++)
         {
-            legs[i] = Leg(masterPins[i],slavePins[i],i%2 == 1);
-            legs[i].writeMaster(90,true);
-        }        
+            legs[i] = Leg(masterPins[i],slavePins[i],i%2 == 1);            
+        }    
+
+        //The other way for the first 2 legs
+        for(int i = 0; i< 2; i++)
+        {
+            legs[i].maxPos = 180 - MASTER_SERVO_MIN_POS;
+            legs[i].minPos = 180 - MASTER_SERVO_MAX_POS;
+            legs[i].upPos = 180 - SLAVE_UP_POSITION;
+            legs[i].slave.slaveBack = false;
+        }       
+        for(int i = 0; i< ARRAY_SIZE(legs);i++)
+        {
+            legs[i].initLeg();
+            sleep_ms(POS_90_TIME);
+        } 
     }
 
     void ChangeToForward()
@@ -590,51 +613,18 @@ class Body
         moveType = Reset;
         step = 1;
     }
-    void ResetPositionMove()
+    void ChangeTo90()
     {
-        switch(movingStates[step])
+        step = 0;
+        moveType = Pos90;
+        for(int i = 0; i < ARRAY_SIZE(legs); i++)
         {
-            case Stop:
-
-            break;
-
-            case Back:
-            {
-                //masters in the right position
-                for(int i = 0; i<ARRAY_SIZE(legs); i++)
-                {
-                    legs[i].ChooseMove(Back, false);
-                }
-                step++;
-                break;
-            }
-            case BackLoop:
-            {
-                if(MovesDone())
-                    step++;
-                break;
-            }
-            case Down1:
-            {
-                //Slaves down
-                for(int i = 0; i<ARRAY_SIZE(legs); i++)
-                {
-                    legs[i].ChooseMove(Down, false);
-                }
-                step++;
-                break;
-            }
-            case DownLoop1:
-            {
-                if(MovesDone())
-                    step=0;
-                break;
-            }   
-            
+            legs[i].master.Write(90);
+            legs[i].slave.Write(90);
+            sleep_ms(POS_90_TIME);
         }
-        
-        
     }
+
     void Move()
     {        
         switch(movingStates[step])
@@ -830,6 +820,11 @@ class Body
             {
                 ChangeToRight();
                 break;
+            }
+            case Pos90:
+            {
+                ChangeTo90();
+                break;                
             }
         }
     }
