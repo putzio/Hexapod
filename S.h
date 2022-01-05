@@ -3,7 +3,7 @@
 #include "pico/double.h"
 #include "hardware/clocks.h"
 
-class Servo{
+class Servos{
     protected:
     uint8_t pin;
     uint slice_num;
@@ -16,7 +16,7 @@ class Servo{
 
     public:
     volatile uint8_t position;
-    Servo(uint8_t chosen_pin=0);
+    Servos(uint8_t chosen_pin=0);
     void write(uint8_t newPosition);
     
     void enable();

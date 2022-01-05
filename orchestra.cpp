@@ -68,8 +68,8 @@ enum State
         DownLoop2,
         Left,
         Right,
-        Reset,
-        Pos90
+        ResetMaster,
+        ResetSlave
     };
     //Loops do all thesame thing, so I have to change it, but carefully, 
     //because it didn't work, when I simply have changed all of the loops
@@ -147,10 +147,11 @@ State rightStates[] = {
 };
 State resetStates[] = {
     Stop,
-    Back,
+    ResetMaster,
     BackLoop,
-    Down1,
-    DownLoop1   
+    ResetSlave,
+    BackLoop,
+    Stop   
 };
 volatile bool enableProgram = true;
 uint16_t map(float x, uint16_t sMin, uint16_t sMax, uint16_t dMin, uint16_t dMax )
@@ -337,7 +338,7 @@ class Servo{
     bool done = true;
     bool enableSlave = false;
     bool slaveBack = true;
-    volatile float position;//position given by the user
+    float position;//position given by the user
     int currentPosition = (SERVO_MIN_MS + SERVO_MAX_MS)/2;
     Servo(uint8_t chosen_pin=0, bool leftServo = false)
     {
@@ -454,10 +455,11 @@ class Leg
 
     void initLeg()
     {
-        master.Write(90);
         master.Enable();
-        slave.SlavePosition(master.Calculate(90));
+        master.Write(90);
+        slave.enableSlave = true;
         slave.Enable();
+        slave.SlavePosition(master.position);        
     }
     public: Leg(int pinMaster = 2, int pinSlave = 3, bool leftLeg = false)
     {
@@ -507,7 +509,7 @@ class Leg
             }
             case Down:
             {
-                ChangePositionSlave(slave.Calculate(master.position));//
+                ChangePositionSlave(slave.Calculate(master.position));
                 break;
             }
             case Back:
@@ -517,7 +519,7 @@ class Leg
             }
             case Up:
             {
-                ChangePositionSlave(upPos);//
+                ChangePositionSlave(upPos);
                 break;
             }            
         }            
@@ -554,6 +556,7 @@ class Body
     State movingStates[ARRAY_SIZE(forwardStates)];
     Mode moveType = StopMode;
     int step = 0;
+    bool reset = false;
     Body(uint8_t masterPins[6], uint8_t slavePins[6])
     {
         for(int i = 0; i < ARRAY_SIZE(legs); i++)
@@ -584,6 +587,12 @@ class Body
         }
         moveType = ForwardMode;
         step = 1;
+        if(reset == false)
+        {
+            ChangeToResetTemp();
+        }
+        else
+            reset = false;
     }
     void ChangeToBack()
     {
@@ -593,6 +602,12 @@ class Body
         }
         moveType = BackMode;
         step = 1;
+        if(reset == false)
+        {
+            ChangeToResetTemp();
+        }
+        else
+            reset = false;
     }
     void ChangeToLeft()
     {
@@ -602,6 +617,12 @@ class Body
         }
         moveType = LeftMode;
         step = 1;
+        if(reset == false)
+        {
+            ChangeToResetTemp();
+        }
+        else
+            reset = false;
     }
     void ChangeToRight()
     {
@@ -611,6 +632,12 @@ class Body
         }
         moveType = RightMode;
         step = 1;
+        if(reset == false)
+        {
+            ChangeToResetTemp();
+        }
+        else
+            reset = false;
     }
     void ChangeToStop()
     {
@@ -624,6 +651,14 @@ class Body
             movingStates[i] = resetStates [i];
         }
         moveType = ResetMode;
+        step = 1;
+    }
+    void ChangeToResetTemp()
+    {        
+        for (int i = 0; i < ARRAY_SIZE(resetStates); i++)
+        {
+            movingStates[i] = resetStates [i];
+        }
         step = 1;
     }
     void ChangeTo90()
@@ -644,15 +679,28 @@ class Body
         {
             case Stop:
             {
+                //if ChangeToResetTemp(), the robot is already reset, so we can move on
+                if(moveType != ResetMode && reset == true)
+                {
+                    StateChanged(moveType);
+                }
 
                 break;
             }
-            case Reset:
+            case ResetMaster:
             {
                 for(int i = 0; i< ARRAY_SIZE(legs);i++)
-                    legs[i].GoToPosition();
-                if(MovesDone())
-                    step = 0;
+                    legs[i].ChooseMove(Back,false);
+                step++;
+                break;
+            }
+            case ResetSlave:
+            {
+                for(int i = 0; i< ARRAY_SIZE(legs);i++)
+                    legs[i].ChooseMove(Down, false);
+                step++;
+                reset = true;
+                break;
             }
             case Forward:
             {
@@ -849,19 +897,19 @@ int main()
     gpio_init(25);
     gpio_set_dir(25, GPIO_OUT);
 
-    gpio_put(25,1);
-    sleep_ms(500);
+    // gpio_put(25,1);
+    // sleep_ms(500);
     UART_INIT(9600);
     uart_puts(uart0, "Hello world!\n");
 
-    gpio_put(25,0);
-    sleep_ms(500);
+    // gpio_put(25,0);
+    // sleep_ms(500);
     
     ADC_INIT();
     MeasureBattery();
     
-    gpio_put(25,1);
-    sleep_ms(500);
+    // gpio_put(25,1);
+    // sleep_ms(500);
 
     uint8_t mser[6],sser[6];
     for(int i = 0; i < ARRAY_SIZE(mser); i++)
@@ -869,18 +917,21 @@ int main()
         mser[i] = 2*(i + 1);//(i+1) because we start at gpio 2
         sser[i] = 2*(i + 1) + 1;
     }
-    sleep_ms(2000);
+    // sleep_ms(2000);
     
-    gpio_put(25,0);
-    sleep_ms(500);
+    // gpio_put(25,0);
+    // sleep_ms(500);
 
     Body body(mser,sser);
+    // body.legs[0].slave.Write(0);
+    // sleep_ms(1000);
+    // body.legs[0].slave.Write(90);
     state = ForwardMode;
     body.StateChanged(state);
     
     gpio_init(16);
-    gpio_put(25,1);
-    sleep_ms(500);
+    // gpio_put(25,1);
+    // sleep_ms(500);
     while(1)
     {
         // uart_puts(uart0, "Recieved:\n");
@@ -888,11 +939,25 @@ int main()
         // uart_puts(uart0, "\n");
         gpio_put(25,1);
         gpio_put(16,1);
-        
+        int i = 0;
         do
         {
             body.Move();
             sleep_ms(20); 
+            i++;
+            if(i>100)
+            {
+                gpio_put(25,0);
+                sleep_ms(1000);
+                for(int j = 0; j < body.step; j++)
+                {
+                    gpio_put(25,1);
+                    sleep_ms(200);
+                    gpio_put(25,0);
+                    sleep_ms(200);
+                }
+                i = 0;
+            }
         }
         while(!body.MovesDone());
 

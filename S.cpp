@@ -1,6 +1,6 @@
 #include "S.h"
 
-void Servo::ServoInit()
+void Servos::ServoInit()
     {
         // Tell GPIO it is allocated to the PWM
         gpio_set_function(this->pin, GPIO_FUNC_PWM);
@@ -12,16 +12,16 @@ void Servo::ServoInit()
         //set clk div to 38 
         pwm_set_clkdiv_int_frac(this->slice_num,125,9);
     }
-void Servo::WriteMs()
+void Servos::WriteMs()
     {
         // Set channel output high for one cycle before dropping
         pwm_set_chan_level(this->slice_num, pwm_gpio_to_channel(this->pin), msPosition);
     }
-uint16_t Servo::map(uint8_t x, uint16_t sMin, uint16_t sMax, uint16_t dMin, uint16_t dMax )
+uint16_t Servos::map(uint8_t x, uint16_t sMin, uint16_t sMax, uint16_t dMin, uint16_t dMax )
     {
         return((x-sMin) * (dMax - dMin) /(sMax - sMin) + dMin);
     }
-Servo::Servo(uint8_t chosen_pin=0)
+Servos::Servos(uint8_t chosen_pin=0)
 {
     if(chosen_pin<16)
         {
@@ -29,7 +29,7 @@ Servo::Servo(uint8_t chosen_pin=0)
             ServoInit();
         }
 }
-void Servo::write(uint8_t newPosition)
+void Servos::write(uint8_t newPosition)
     {
         if(newPosition<=180 && newPosition>=0)
         {
@@ -38,7 +38,7 @@ void Servo::write(uint8_t newPosition)
             WriteMs();
         }
     }
-void Servo::enable()
+void Servos::enable()
     {
         // Set the PWM running
         pwm_set_enabled(slice_num, true);

@@ -1,123 +1,134 @@
-/*
- Servo.cpp - Interrupt driven Servo library for Arduino using 16 bit timers- Version 2
- Copyright (c) 2009 Michael Margolis.  All right reserved.
- This library is free software; you can redistribute it and/or
- modify it under the terms of the GNU Lesser General Public
- License as published by the Free Software Foundation; either
- version 2.1 of the License, or (at your option) any later version.
- This library is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- Lesser General Public License for more details.
- You should have received a copy of the GNU Lesser General Public
- License along with this library; if not, write to the Free Software
- Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */
+    #include "Servo.h"
+    uint16_t Servo::CalculateLeft(uint16_t pos)
+    {
+        int pos90 = map(90,0,180,SERVO_MIN_MS,SERVO_MAX_MS);
+        //get the distance from 90 degrees
+        int distance = pos90 - pos;
+        //return another direction
+        return pos90 + distance;
+    }
+    void Servo::ServoInit()
+    {
+        // Tell GPIO it is allocated to the PWM
+        gpio_set_function(this->pin, GPIO_FUNC_PWM);
+        // Find out which PWM slice is connected to GPIO 
+        this->slice_num = pwm_gpio_to_slice_num (this->pin);    
+        // Set period of 20000 cycles (0 to 20000 inclusive)
+        pwm_set_wrap(this->slice_num, 20000);
+        //setting period = 20ms
+        //set clk div to 38 
+        pwm_set_clkdiv_int_frac(this->slice_num,125,9);
+    }
+    void Servo::WriteMs()
+    {
+        if(left)
+        pwm_set_chan_level(this->slice_num, pwm_gpio_to_channel(this->pin), CalculateLeft(msPosition));
+        else
+        // Set channel output high for one cycle before dropping
+        pwm_set_chan_level(this->slice_num, pwm_gpio_to_channel(this->pin), msPosition);
+        this->currentPosition = msPosition;
+    }   
 
-#include "pico/stdlib.h"
-#include "hardware/pwm.h"
+    Servo::Servo(uint8_t chosen_pin=0, bool leftServo = false)
+    {
+        if(chosen_pin<16 && chosen_pin>=2)
+        {            
+            this->pin = chosen_pin;
+            ServoInit();
+            this->left = leftServo;
+        }
 
-#include "Servo.h"
+    }
+    void Servo::GoToPosition()
+    {
+        CalculateVelocity();
+        if(!done)
+        {
+            // this->currentPosition+=((this->currentPosition-this->msPosition)/300);                       
+            if(this->currentPosition > this->msPosition)
+                this->currentPosition-=this->velocity;
+            else
+                this->currentPosition+=this->velocity;
+            
+            // if(currentPosition - msPosition < velocity && 
+            //    currentPosition - msPosition > -velocity)
+            if(IS_BETWEEN(currentPosition-msPosition,-velocity,velocity))
+                this->currentPosition = this->msPosition; 
 
-Servo::Servo()
-{
-  if( ServoCount < MAX_SERVOS) {
-    this->servoIndex = ServoCount++;                    // assign a servo index to this instance
-	servos[this->servoIndex].ticks = usToTicks(DEFAULT_PULSE_WIDTH);   // store default values  - 12 Aug 2009
-  }
-  else
-    this->servoIndex = INVALID_SERVO ;  // too many servos
-}
+            //Move servo
+            if(left)
+                pwm_set_chan_level(this->slice_num, pwm_gpio_to_channel(this->pin), CalculateLeft(this->currentPosition));
+            else
+                pwm_set_chan_level(this->slice_num, pwm_gpio_to_channel(this->pin), this->currentPosition);
+            
+            //If the servo has reached the final position move is done            
+            if(this->currentPosition==this->msPosition)
+                done = true;
+        }        
+    }
+    void Servo::CalculateVelocity()
+    {
+        // if(currentPosition - msPosition < DISTANCE_DECCELERATION && 
+        //     currentPosition - msPosition > - DISTANCE_DECCELERATION )
+        if(IS_BETWEEN(currentPosition - msPosition,-DISTANCE_DECCELERATION,DISTANCE_DECCELERATION))
+        {
+            //deccelerate
+            velocity -= DECCELERATION; 
+        }
+        else
+        {
+            //accelerate
+            velocity +=ACCELERATION;
+        }
 
-uint8_t Servo::attach(int pin)
-{    
-  return this->attach(pin, MIN_PULSE_WIDTH, MAX_PULSE_WIDTH);
-}
-
-uint8_t Servo::attach(int pin, int min, int max)
-{
-  if(this->servoIndex < MAX_SERVOS ) {
-    pinMode( pin, OUTPUT) ;                                   // set servo pin to output
-    servos[this->servoIndex].Pin.nbr = pin;
-    // todo min/max check: abs(min - MIN_PULSE_WIDTH) /4 < 128
-    this->min  = (MIN_PULSE_WIDTH - min)/4; //resolution of min/max is 4 us
-    this->max  = (MAX_PULSE_WIDTH - max)/4;
-    // initialize the timer if it has not already been initialized
-    timer16_Sequence_t timer = SERVO_INDEX_TO_TIMER(servoIndex);
-    if(isTimerActive(timer) == false)
-      initISR(timer);
-    servos[this->servoIndex].Pin.isActive = true;  // this must be set after the check for isTimerActive
-  }
-  return this->servoIndex ;
-}
-
-void Servo::detach()
-{
-  servos[this->servoIndex].Pin.isActive = false;
-  timer16_Sequence_t timer = SERVO_INDEX_TO_TIMER(servoIndex);
-  if(isTimerActive(timer) == false) {
-    finISR(timer);
-  }
-}
-
-void Servo::write(int value)
-{
-  if(value < MIN_PULSE_WIDTH)
-  {  // treat values less than 544 as angles in degrees (valid values in microseconds are handled as microseconds)
-    if(value < 0) value = 0;
-    if(value > 180) value = 180;
-    value = map(value, 0, 180, SERVO_MIN(),  SERVO_MAX());
-  }
-  this->writeMicroseconds(value);
-}
-
-void Servo::writeMicroseconds(int value)
-{
-  // calculate and store the values for the given channel
-  byte channel = this->servoIndex;
-  if( (channel < MAX_SERVOS) )   // ensure channel is valid
-  {
-    if( value < SERVO_MIN() )          // ensure pulse width is valid
-      value = SERVO_MIN();
-    else if( value > SERVO_MAX() )
-      value = SERVO_MAX();
-
-    value = value - TRIM_DURATION;
-    value = usToTicks(value);  // convert to ticks after compensating for interrupt overhead - 12 Aug 2009
-
-    uint8_t oldSREG = SREG;
-    cli();
-    servos[channel].ticks = value;
-    SREG = oldSREG;
-  }
-}
-
-int Servo::read() // return the value as degrees
-{
-  return  map( this->readMicroseconds()+1, SERVO_MIN(), SERVO_MAX(), 0, 180);
-}
-
-int Servo::readMicroseconds()
-{
-  unsigned int pulsewidth;
-  if( this->servoIndex != INVALID_SERVO )
-    pulsewidth = ticksToUs(servos[this->servoIndex].ticks)  + TRIM_DURATION ;   // 12 aug 2009
-  else
-    pulsewidth  = 0;
-
-  return pulsewidth;
-}
-
-bool Servo::attached()
-{
-  return servos[this->servoIndex].Pin.isActive ;
-}
-
-// © 2021 GitHub, Inc.
-// Terms
-// Privacy
-// Security
-// Status
-// Docs
-// Contact GitHub
-// Pricing
+        if(velocity<MIN_VELOCITY)
+            velocity = MIN_VELOCITY;
+        if(velocity>MAX_VELOCITY)
+            velocity = MAX_VELOCITY;
+    }
+    void Servo::ChangePosition(uint8_t pos)
+    {
+        msPosition = map(pos,0,180,SERVO_MIN_MS,SERVO_MAX_MS);
+        position = pos;
+        done = false;
+    }
+    void Servo::SlavePosition(float pos)
+    {
+        if(enableSlave)
+        {
+            position = Calculate(pos);
+            Write(position);         
+        }        
+    }
+    
+    uint8_t Servo::Calculate(int pos)
+    {
+        float alfa =  pos - 90.0;     
+        if(alfa < 0)
+            alfa = - alfa;
+        float rad = 3.1415/180.0;
+        float sinPosNAlfa = (h  - cos((float)alfa * rad));
+        // position = asin(sinPosNAlfa)/rad - alfa;
+        // float calculatedH = cos(alfa * rad) + sin((position + alfa) * rad); 
+        // sinPosNAlfa += (h - calculatedH);
+        if(slaveBack)
+            position = asin(sinPosNAlfa)/rad - alfa;  
+        else 
+            position = 180.0 - asin(sinPosNAlfa)/rad + alfa;
+        return position;
+    }
+    void Servo::Write(uint8_t newPosition)
+    {
+        if(newPosition<=180 && newPosition>=0)
+        {            
+            this->position = newPosition;
+            this->msPosition = map(this->position,0,180,SERVO_MIN_MS,SERVO_MAX_MS);
+            WriteMs();
+        }
+    }
+    
+    void Servo::Enable()
+    {
+        // Set the PWM running
+        pwm_set_enabled(slice_num, true);
+    }
