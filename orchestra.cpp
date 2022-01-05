@@ -71,17 +71,20 @@ enum State
         Reset,
         Pos90
     };
+    //Loops do all thesame thing, so I have to change it, but carefully, 
+    //because it didn't work, when I simply have changed all of the loops
+    // in the arrays to e.g. ForwardLoop
 enum Mode 
 {
-    Stop,
-    Forward,
-    Back,
-    Left,
-    Right,
-    Reset,
-    Pos90
+    StopMode,
+    ForwardMode,
+    BackMode,
+    LeftMode,
+    RightMode,
+    ResetMode,
+    Pos90Mode
 };
-Mode state = Stop;
+Mode state = StopMode;
 State forwardStates[] = {
     Stop,
     Forward,
@@ -207,25 +210,25 @@ void on_uart_rx() {
         switch (mode)
         {
         case 'f':
-            state = Forward;
+            state = ForwardMode;
             break;
         case 'b':
-            state = Back;
+            state = BackMode;
             break;
         case 'l':
-            state = Left;
+            state = LeftMode;
             break;
         case 'r':
-            state = Right;
+            state = RightMode;
             break;
         case 's':
-            state = Stop;
+            state = StopMode;
             break;
         case 'R':
-            state = Reset;
+            state = ResetMode;
             break;
         case 'P':
-            state = Pos90;
+            state = Pos90Mode;
         }
     }
     //----------echo-------------------
@@ -549,7 +552,7 @@ class Body
     uint8_t legTeam1[3] = {0,3,4};
     uint8_t legTeam2[3] = {1,2,5};   
     State movingStates[ARRAY_SIZE(forwardStates)];
-    Mode moveType = Stop;
+    Mode moveType = StopMode;
     int step = 0;
     Body(uint8_t masterPins[6], uint8_t slavePins[6])
     {
@@ -579,7 +582,7 @@ class Body
         {
             movingStates[i] = forwardStates [i];
         }
-        moveType = Forward;
+        moveType = ForwardMode;
         step = 1;
     }
     void ChangeToBack()
@@ -588,7 +591,7 @@ class Body
         {
             movingStates[i] = backStates [i];
         }
-        moveType = Back;
+        moveType = BackMode;
         step = 1;
     }
     void ChangeToLeft()
@@ -597,7 +600,7 @@ class Body
         {
             movingStates[i] = leftStates [i];
         }
-        moveType = Left;
+        moveType = LeftMode;
         step = 1;
     }
     void ChangeToRight()
@@ -606,13 +609,13 @@ class Body
         {
             movingStates[i] = rightStates [i];
         }
-        moveType = Right;
+        moveType = RightMode;
         step = 1;
     }
     void ChangeToStop()
     {
         step = 0;
-        moveType = Stop;
+        moveType = StopMode;
     }
     void ChangeToReset()
     {
@@ -620,13 +623,13 @@ class Body
         {
             movingStates[i] = resetStates [i];
         }
-        moveType = Reset;
+        moveType = ResetMode;
         step = 1;
     }
     void ChangeTo90()
     {
         step = 0;
-        moveType = Pos90;
+        moveType = Pos90Mode;
         for(int i = 0; i < ARRAY_SIZE(legs); i++)
         {
             legs[i].master.Write(90);
@@ -653,7 +656,7 @@ class Body
             }
             case Forward:
             {
-                bool back = (moveType == Back);//Forward => false
+                bool back = (moveType == BackMode);//Forward => false
                 for(int i = 0; i<ARRAY_SIZE(legTeam1); i++)
                 {                    
                     legs[legTeam1[i]].ChooseMove(Forward, back);//Forward => false
@@ -706,7 +709,7 @@ class Body
             }
             case Back:
             {
-                bool forward = (moveType == Forward);//Forward => true
+                bool forward = (moveType == ForwardMode);//Forward => true
                 for(int i = 0; i<ARRAY_SIZE(legTeam1); i++)
                 {
                     legs[legTeam1[i]].ChooseMove(Back, forward);//Forward => true
@@ -762,7 +765,7 @@ class Body
             case  Left:
             {
                 
-                bool right = (moveType == Right);
+                bool right = (moveType == RightMode);
                 legs[0].ChooseMove(Forward, !right);
                 legs[1].ChooseMove(Forward, right);
                 legs[2].ChooseMove(Back, right);
@@ -774,7 +777,7 @@ class Body
             }
             case  Right:
             {
-                bool right = (moveType == Right);
+                bool right = (moveType == RightMode);
                 legs[0].ChooseMove(Back, right);
                 legs[1].ChooseMove(Back, !right);
                 legs[2].ChooseMove(Forward, !right);
@@ -801,37 +804,37 @@ class Body
     {        
         switch(s)
         {
-            case Stop:
+            case StopMode:
             {
                 ChangeToStop();
                 break;
             }
-            case Reset:
+            case ResetMode:
             {
                 ChangeToReset();
                 break;
             }
-            case Forward:
+            case ForwardMode:
             {
                 ChangeToForward();
                 break;
             }
-            case Back:
+            case BackMode:
             {
                 ChangeToBack();
                 break;
             }
-            case Left:
+            case LeftMode:
             {
                 ChangeToLeft();
                 break;
             }
-            case Right:
+            case RightMode:
             {
                 ChangeToRight();
                 break;
             }
-            case Pos90:
+            case Pos90Mode:
             {
                 ChangeTo90();
                 break;                
@@ -872,7 +875,7 @@ int main()
     sleep_ms(500);
 
     Body body(mser,sser);
-    state = Forward;
+    state = ForwardMode;
     body.StateChanged(state);
     
     gpio_init(16);
