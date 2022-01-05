@@ -48,7 +48,7 @@
 #define MASTER_SERVO_MIN_POS 100
 #define MASTER_SERVO_MAX_POS 130
 #define SLAVE_UP_POSITION 0
-//States
+//States 
 enum State
     {
         Stop,
@@ -71,7 +71,17 @@ enum State
         Reset,
         Pos90
     };
-State state = Stop;
+enum Mode 
+{
+    Stop,
+    Forward,
+    Back,
+    Left,
+    Right,
+    Reset,
+    Pos90
+};
+Mode state = Stop;
 State forwardStates[] = {
     Stop,
     Forward,
@@ -539,7 +549,7 @@ class Body
     uint8_t legTeam1[3] = {0,3,4};
     uint8_t legTeam2[3] = {1,2,5};   
     State movingStates[ARRAY_SIZE(forwardStates)];
-    State moveType = Stop;
+    Mode moveType = Stop;
     int step = 0;
     Body(uint8_t masterPins[6], uint8_t slavePins[6])
     {
@@ -787,7 +797,7 @@ class Body
         }
         return true;
     }
-    void StateChanged(State s)
+    void StateChanged(Mode s)
     {        
         switch(s)
         {
