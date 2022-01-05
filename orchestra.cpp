@@ -36,7 +36,7 @@
 #define DECCELERATION 1
 #define MAX_VELOCITY 20 //20/(2400-550)/0.02 = 97*/s //in datasheet max speed -> 60*/0.1s = 600*/s
 #define MIN_VELOCITY 1
-#define DISTANCE_DECCELERATION  200
+#define DISTANCE_DECCELERATION  100
 #define POS_90_TIME 200 //time for the leg to move to 90* before the next starts to move (to lower the current)
 
 //Measure Battery
@@ -53,27 +53,20 @@ enum State
     {
         Stop,
         Forward,
-        ForwardLoop,
+        MasterLoop,
+        SlaveLoop,
         Back,
-        BackLoop,
         Up,
         Up1,
-        UpLoop1,
         Up2,
-        UpLoop2,
         Down,
         Down1,
-        DownLoop1,
         Down2,
-        DownLoop2,
         Left,
         Right,
         ResetMaster,
         ResetSlave
     };
-    //Loops do all thesame thing, so I have to change it, but carefully, 
-    //because it didn't work, when I simply have changed all of the loops
-    // in the arrays to e.g. ForwardLoop
 enum Mode 
 {
     StopMode,
@@ -88,69 +81,69 @@ Mode state = StopMode;
 State forwardStates[] = {
     Stop,
     Forward,
-    ForwardLoop,
+    MasterLoop,
     Down1,
-    DownLoop1,
+    SlaveLoop,
     Down2,
-    DownLoop2,
+    SlaveLoop,
     Back,
-    BackLoop,
+    MasterLoop,
     Up1,
-    UpLoop1,
+    SlaveLoop,
     Up2,
-    UpLoop2
+    SlaveLoop
 };
 State backStates[] = {
     Stop,
     Forward,
-    ForwardLoop,
+    MasterLoop,
     Up1,
-    UpLoop1,
+    SlaveLoop,
     Up2,
-    UpLoop2,
+    SlaveLoop,
     Back,
-    BackLoop,
+    MasterLoop,
     Down1,
-    DownLoop1,
+    SlaveLoop,
     Down2,
-    DownLoop2
+    SlaveLoop
 };
 State leftStates[] = {
     Stop,
     Right,//L1 Back
-    ForwardLoop,
+    MasterLoop,
     Down1,
-    DownLoop1,
+    SlaveLoop,
     Down2,
-    DownLoop2,
+    SlaveLoop,
     Left,//L1 Forward
-    BackLoop,
+    MasterLoop,
     Up1,
-    UpLoop1,
+    SlaveLoop,
     Up2,
-    UpLoop2
+    SlaveLoop
 };
 State rightStates[] = {
     Stop,
     Right,
-    ForwardLoop,
+    MasterLoop,
     Up1,
-    UpLoop1,
+    SlaveLoop,
     Up2,
-    UpLoop2,
+    SlaveLoop,
     Left,
-    BackLoop,
+    MasterLoop,
     Down1,
-    DownLoop1,
+    SlaveLoop,
     Down2,
-    DownLoop2
+    SlaveLoop
 };
 State resetStates[] = {
     Stop,
     ResetMaster,
-    BackLoop,
+    MasterLoop,
     ResetSlave,
-    BackLoop,
+    SlaveLoop,
     Stop   
 };
 volatile bool enableProgram = true;
@@ -713,7 +706,7 @@ class Body
                 step++;
                 break;
             }
-            case ForwardLoop:
+            case MasterLoop:
             {                
                 for(int i = 0; i< ARRAY_SIZE(legs);i++)
                     legs[i].GoToPosition();
@@ -730,7 +723,7 @@ class Body
                 step++;
                 break;
             }
-            case DownLoop1:
+            case SlaveLoop:
             {
                 for(int i = 0; i< ARRAY_SIZE(legs);i++)
                     legs[i].GoToPositionSlave();
@@ -747,14 +740,6 @@ class Body
                 step++;
                 break;
             }
-            case DownLoop2:
-            {
-                for(int i = 0; i< ARRAY_SIZE(legs);i++)
-                    legs[i].GoToPositionSlave();
-                if(MovesDone())
-                    step++;        
-                break;
-            }
             case Back:
             {
                 bool forward = (moveType == ForwardMode);//Forward => true
@@ -766,14 +751,6 @@ class Body
                 step++;
                 break;
             }
-            case BackLoop:
-            {
-                for(int i = 0; i< ARRAY_SIZE(legs);i++)
-                    legs[i].GoToPosition();
-                if(MovesDone())
-                    step++;        
-                break;
-            }
             case Up1:
             {
                 for(int i = 0; i<ARRAY_SIZE(legTeam1); i++)
@@ -783,14 +760,6 @@ class Body
                 step++;
                 break;
             }
-            case UpLoop1:
-            {
-                for(int i = 0; i< ARRAY_SIZE(legs);i++)
-                    legs[i].GoToPositionSlave();
-                if(MovesDone())
-                    step++;         
-                break;
-            }
             case Up2:
             {
                 for(int i = 0; i<ARRAY_SIZE(legTeam1); i++)
@@ -798,14 +767,6 @@ class Body
                     legs[legTeam1[i]].ChooseMove(Up, false);
                 }
                 step++;
-                break;
-            }
-            case UpLoop2:
-            {
-                for(int i = 0; i< ARRAY_SIZE(legs);i++)
-                    legs[i].GoToPositionSlave();
-                if(MovesDone())
-                    step++;         
                 break;
             }
 
@@ -926,7 +887,7 @@ int main()
     // body.legs[0].slave.Write(0);
     // sleep_ms(1000);
     // body.legs[0].slave.Write(90);
-    state = ForwardMode;
+    state = ResetMode;
     body.StateChanged(state);
     
     gpio_init(16);
@@ -939,25 +900,11 @@ int main()
         // uart_puts(uart0, "\n");
         gpio_put(25,1);
         gpio_put(16,1);
-        int i = 0;
+        // int i = 0;
         do
         {
             body.Move();
             sleep_ms(20); 
-            i++;
-            if(i>100)
-            {
-                gpio_put(25,0);
-                sleep_ms(1000);
-                for(int j = 0; j < body.step; j++)
-                {
-                    gpio_put(25,1);
-                    sleep_ms(200);
-                    gpio_put(25,0);
-                    sleep_ms(200);
-                }
-                i = 0;
-            }
         }
         while(!body.MovesDone());
 
