@@ -32,10 +32,10 @@
 #define SERVO_MAX_MS 2400//time in microseconds for 180 degrees
 #define CYCLE_TIME 20 //ms
 #define ACCELLERATION_PER_S 50.0
-#define ACCELERATION 0.2//ACCELERATION_PER_S*CYCLE_TIME *(SERVO_MAX_MS - SERVO_MIN_MS)/180
+#define ACCELERATION 0.5//ACCELERATION_PER_S*CYCLE_TIME *(SERVO_MAX_MS - SERVO_MIN_MS)/180
 #define DECCELERATION 1
 #define MAX_VELOCITY 20 //20/(2400-550)/0.02 = 97*/s //in datasheet max speed -> 60*/0.1s = 600*/s
-#define MIN_VELOCITY 1
+#define MIN_VELOCITY 4
 #define DISTANCE_DECCELERATION  100
 #define POS_90_TIME 200 //time for the leg to move to 90* before the next starts to move (to lower the current)
 
@@ -108,22 +108,7 @@ State backStates[] = {
     Down2,
     SlaveLoop
 };
-State leftStates[] = {
-    Stop,
-    Right,//L1 Back
-    MasterLoop,
-    Down1,
-    SlaveLoop,
-    Down2,
-    SlaveLoop,
-    Left,//L1 Forward
-    MasterLoop,
-    Up1,
-    SlaveLoop,
-    Up2,
-    SlaveLoop
-};
-State rightStates[] = {
+State leftStates[] = {    
     Stop,
     Right,
     MasterLoop,
@@ -136,6 +121,21 @@ State rightStates[] = {
     Down1,
     SlaveLoop,
     Down2,
+    SlaveLoop
+};
+State rightStates[] = {
+    Stop,
+    Right,//L1 Back
+    MasterLoop,
+    Down1,
+    SlaveLoop,
+    Down2,
+    SlaveLoop,
+    Left,//L1 Forward
+    MasterLoop,
+    Up1,
+    SlaveLoop,
+    Up2,
     SlaveLoop
 };
 State resetStates[] = {
@@ -558,7 +558,7 @@ class Body
         }    
 
         //The other way for the first 2 legs
-        for(int i = 0; i< 2; i++)
+        for(int i = 0; i< 4; i++)
         {
             legs[i].maxPos = 180 - MASTER_SERVO_MIN_POS;
             legs[i].minPos = 180 - MASTER_SERVO_MAX_POS;
@@ -775,24 +775,24 @@ class Body
             {
                 
                 bool right = (moveType == RightMode);
-                legs[0].ChooseMove(Forward, !right);
-                legs[1].ChooseMove(Forward, right);
-                legs[2].ChooseMove(Back, right);
-                legs[3].ChooseMove(Back, !right);
-                legs[4].ChooseMove(Forward, !right);
-                legs[5].ChooseMove(Forward, right);
+                legs[0].ChooseMove(Forward, right);
+                legs[1].ChooseMove(Forward, !right);
+                legs[2].ChooseMove(Back, !right);
+                legs[3].ChooseMove(Back, right);
+                legs[4].ChooseMove(Forward, right);
+                legs[5].ChooseMove(Forward, !right);
                 step++;
                 break;
             }
             case  Right:
             {
                 bool right = (moveType == RightMode);
-                legs[0].ChooseMove(Back, right);
-                legs[1].ChooseMove(Back, !right);
-                legs[2].ChooseMove(Forward, !right);
-                legs[3].ChooseMove(Forward, right);
-                legs[4].ChooseMove(Back, right);
-                legs[5].ChooseMove(Back, !right);
+                legs[0].ChooseMove(Back, !right);
+                legs[1].ChooseMove(Back, right);
+                legs[2].ChooseMove(Forward, right);
+                legs[3].ChooseMove(Forward, !right);
+                legs[4].ChooseMove(Back, !right);
+                legs[5].ChooseMove(Back, right);
                 step++;
                 break;
             }
@@ -915,7 +915,7 @@ int main()
         {
             body.StateChanged(state);
         }
-        sleep_ms(500);
+        sleep_ms(100);
 
     }
 }
