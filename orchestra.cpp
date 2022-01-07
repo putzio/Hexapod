@@ -253,7 +253,7 @@ void ADC_INIT()
     //set LED and gpio, which turns on the transistor as output  
     gpio_init(LED_VIN_LOW);
     gpio_set_dir(LED_VIN_LOW, GPIO_OUT);
-    gpio_put(LED_VIN_LOW,1);
+    //gpio_put(LED_VIN_LOW,1);
     gpio_init(EN_VIN_CHECK);
     gpio_set_dir(EN_VIN_CHECK, GPIO_OUT);    
 }
@@ -436,6 +436,11 @@ class Servo{
         // Set the PWM running
         pwm_set_enabled(slice_num, true);
     }
+    void Disable()
+    {
+        // Set the PWM running
+        pwm_set_enabled(slice_num, false);
+    }
 };
 
 class Leg
@@ -538,6 +543,11 @@ class Leg
             return true;
         else
             return false;
+    }
+    void DisableLeg()
+    {
+        master.Disable()
+        slave.Disable();
     }
 };
 class Body
@@ -850,6 +860,13 @@ class Body
             }
         }
     }
+    void DisableLegs()
+    {
+        for(int i = 0; i < ARRAY_SIZE(legs); i++)
+        {
+            legs[i].DisableLeg();
+        }
+    }
 };
 int main() 
 {
@@ -895,26 +912,34 @@ int main()
     // sleep_ms(500);
     while(1)
     {
+        // if(MeasureBattery())
+        // {
+        //     body.DisableLegs();
+        // }
+        // else
+        {
+            gpio_put(25,1);
+            gpio_put(16,1);
+            // int i = 0;
+            do
+            {
+                body.Move();
+                sleep_ms(20); 
+            }
+            while(!body.MovesDone());
+
+            gpio_put(25,0);
+            gpio_put(16,0);
+            // enableProgram = MeasureBattery();
+            if(state != body.moveType)
+            {
+                body.StateChanged(state);
+            }
+        }
         // uart_puts(uart0, "Recieved:\n");
         // uart_putc(uart0,body.step + 48);
         // uart_puts(uart0, "\n");
-        gpio_put(25,1);
-        gpio_put(16,1);
-        // int i = 0;
-        do
-        {
-            body.Move();
-            sleep_ms(20); 
-        }
-        while(!body.MovesDone());
-
-        gpio_put(25,0);
-        gpio_put(16,0);
-        // enableProgram = MeasureBattery();
-        if(state != body.moveType)
-        {
-            body.StateChanged(state);
-        }
+        
         sleep_ms(100);
 
     }
