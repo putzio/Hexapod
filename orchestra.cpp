@@ -14,7 +14,7 @@
 
 #define ARRAY_SIZE(a) sizeof(a)/sizeof(a[0])
 #define IS_BETWEEN(x,min,max) (x>min&&x<max)
-#define h 1.7
+#define h 1.7 // max = 1,76, min = 1,5???
 
 //pins 
 #define RX_PIN 1
@@ -192,7 +192,9 @@ void UART_INIT(int baud)
     // Now enable the UART to send interrupts - RX only
     uart_set_irq_enables(UART_ID, true, false);
 }
-
+bool changeVelocity = false;
+int velocity = MIN_VELOCITY;
+bool velocityChanged = false;
 void on_uart_rx() {
     //----------getting the robot moves-----------------
     
@@ -201,29 +203,54 @@ void on_uart_rx() {
         uart_puts(uart0, "Recieved:\n");
         uart_putc(uart0,mode);
         uart_puts(uart0, "\n");
-        switch (mode)
+        if(changeVelocity)
         {
-        case 'f':
-            state = ForwardMode;
-            break;
-        case 'b':
-            state = BackMode;
-            break;
-        case 'l':
-            state = LeftMode;
-            break;
-        case 'r':
-            state = RightMode;
-            break;
-        case 's':
-            state = StopMode;
-            break;
-        case 'R':
-            state = ResetMode;
-            break;
-        case 'P':
-            state = Pos90Mode;
+            if(mode == '&')
+            {
+                velocityChanged = true;
+                changeVelocity = false;
+            }
+            else
+            {
+                velocity *=10;
+                velocity += (int)mode - 48;
+            }
+            
         }
+        else
+        {
+            switch (mode)
+            {
+                case 'f':
+                    state = ForwardMode;
+                    break;
+                case 'b':
+                    state = BackMode;
+                    break;
+                case 'l':
+                    state = LeftMode;
+                    break;
+                case 'r':
+                    state = RightMode;
+                    break;
+                case 's':
+                    state = StopMode;
+                    break;
+                case 'R':
+                    state = ResetMode;
+                    break;
+                case 'P':
+                    state = Pos90Mode;
+                    break;
+                case 'V':
+                {
+                    changeVelocity = true;
+                    velocity = 0;
+                    break;
+                }                
+            }
+        }
+        
     }
     //----------echo-------------------
     // char buffer[20];
@@ -287,8 +314,7 @@ class Servo{
     protected:
     uint8_t pin;//given by the user in the constructor
     uint slice_num;//defined in ServoInit() method form the pin variable
-    bool left = false; //if the servo is on the other side it has to move the opposite way -> left = true
-    
+    bool left = false; //if the servo is on the other side it has to move the opposite way -> left = true    
     //msPosition:
     //calculated from position in the Write() method of destination 
     //--------OR----- 
@@ -370,6 +396,12 @@ class Servo{
                 done = true;
         }        
     }
+    int maxVelocity = MAX_VELOCITY;
+    int minVelocity = MIN_VELOCITY;
+    void ChangeVelocityLimits(int v)
+    {
+        minVelocity = v;
+    }
     void CalculateVelocity()
     {
         // if(currentPosition - msPosition < DISTANCE_DECCELERATION && 
@@ -385,10 +417,10 @@ class Servo{
             velocity +=ACCELERATION;
         }
 
-        if(velocity<MIN_VELOCITY)
-            velocity = MIN_VELOCITY;
-        if(velocity>MAX_VELOCITY)
-            velocity = MAX_VELOCITY;
+        if(velocity<minVelocity)
+            velocity = minVelocity;
+        if(velocity>maxVelocity)
+            velocity = maxVelocity;
     }
     void ChangePosition(uint8_t pos)
     {
@@ -463,6 +495,11 @@ class Leg
     {
         master = Servo(pinMaster, leftLeg);
         slave = Servo(pinSlave, leftLeg);
+    }
+    void ChangeLegVelocityLimits(int v)
+    {
+        master.ChangeVelocityLimits(v);
+        slave.ChangeVelocityLimits(v);
     }
     void WriteMaster(int position, bool slaveEnabled)
     {
@@ -546,7 +583,7 @@ class Leg
     }
     void DisableLeg()
     {
-        master.Disable()
+        master.Disable();
         slave.Disable();
     }
 };
@@ -581,7 +618,13 @@ class Body
             sleep_ms(POS_90_TIME);
         } 
     }
-
+    void ChangeBodyVelocityLimits(int v)
+    {
+        for(int i = 0; i < ARRAY_SIZE(legs); i++)
+        {
+            legs[i].ChangeLegVelocityLimits(v);
+        }
+    }
     void ChangeToForward()
     {
         for (int i = 0; i < ARRAY_SIZE(forwardStates); i++)
@@ -918,6 +961,10 @@ int main()
         // }
         // else
         {
+            if(velocityChanged)
+            {
+                body.ChangeBodyVelocityLimits(velocity);
+            }
             gpio_put(25,1);
             gpio_put(16,1);
             // int i = 0;
