@@ -346,17 +346,14 @@ class Servo{
     void WriteMs()
     {
         if(left)
-        pwm_set_chan_level(this->slice_num, pwm_gpio_to_channel(this->pin), CalculateLeft(msPosition));
+        pwm_set_chan_level(this->slice_num, pwm_gpio_to_channel(this->pin), CalculateLeft(currentPosition));
         else
         // Set channel output high for one cycle before dropping
-        pwm_set_chan_level(this->slice_num, pwm_gpio_to_channel(this->pin), msPosition);
-        this->currentPosition = msPosition;
+        pwm_set_chan_level(this->slice_num, pwm_gpio_to_channel(this->pin), currentPosition);
     }   
     
     public:
-    bool done = true;
-    bool enableSlave = false;
-    bool slaveBack = true;
+    bool done = true;   
     float position;//position given by the user
     int currentPosition = (SERVO_MIN_MS + SERVO_MAX_MS)/2;
     Servo(uint8_t chosen_pin=0, bool leftServo = false)
@@ -386,10 +383,7 @@ class Servo{
                 this->currentPosition = this->msPosition; 
 
             //Move servo
-            if(left)
-                pwm_set_chan_level(this->slice_num, pwm_gpio_to_channel(this->pin), CalculateLeft(this->currentPosition));
-            else
-                pwm_set_chan_level(this->slice_num, pwm_gpio_to_channel(this->pin), this->currentPosition);
+            WriteMs();
             
             //If the servo has reached the final position move is done            
             if(this->currentPosition==this->msPosition)
@@ -428,7 +422,40 @@ class Servo{
         position = pos;
         done = false;
     }
-    void SlavePosition(float pos)
+   void Write(uint8_t newPosition)
+    {
+        if(newPosition<=180 && newPosition>=0)
+        {            
+            this->position = newPosition;
+            this->msPosition = map(this->position,0,180,SERVO_MIN_MS,SERVO_MAX_MS);
+            currentPosition = msPosition;            
+            WriteMs();
+        }
+    }
+    
+    void Enable()
+    {
+        // Set the PWM running
+        pwm_set_enabled(slice_num, true);
+    }
+    void Disable()
+    {
+        // Set the PWM running
+        pwm_set_enabled(slice_num, false);
+    }
+};
+
+class SlaveServo:public Servo{
+    
+    public:
+    bool enableSlave = false;
+    bool slaveBack = true;
+    SlaveServo(uint8_t chosen_pin=0, bool leftServo = false, bool sBack = true)
+    :Servo(chosen_pin=0, leftServo = false)
+    {
+        slaveBack = sBack;
+    }
+     void SlavePosition(float pos)
     {
         if(enableSlave)
         {
@@ -453,32 +480,14 @@ class Servo{
             position = 180.0 - asin(sinPosNAlfa)/rad + alfa;
         return position;
     }
-    void Write(uint8_t newPosition)
-    {
-        if(newPosition<=180 && newPosition>=0)
-        {            
-            this->position = newPosition;
-            this->msPosition = map(this->position,0,180,SERVO_MIN_MS,SERVO_MAX_MS);
-            WriteMs();
-        }
-    }
     
-    void Enable()
-    {
-        // Set the PWM running
-        pwm_set_enabled(slice_num, true);
-    }
-    void Disable()
-    {
-        // Set the PWM running
-        pwm_set_enabled(slice_num, false);
-    }
 };
 
 class Leg
 {
     public:
-    Servo master , slave;    
+    Servo master;
+    SlaveServo slave;    
     int maxPos = MASTER_SERVO_MAX_POS;
     int minPos = MASTER_SERVO_MIN_POS;
     int upPos = SLAVE_UP_POSITION;
@@ -491,10 +500,10 @@ class Leg
         slave.Enable();
         slave.SlavePosition(master.position);        
     }
-    public: Leg(int pinMaster = 2, int pinSlave = 3, bool leftLeg = false)
+    public: Leg(int pinMaster = 2, int pinSlave = 3, bool leftLeg = false, bool sBack = true)
     {
         master = Servo(pinMaster, leftLeg);
-        slave = Servo(pinSlave, leftLeg);
+        slave = SlaveServo(pinSlave, leftLeg, sBack);
     }
     void ChangeLegVelocityLimits(int v)
     {
@@ -601,7 +610,9 @@ class Body
     {
         for(int i = 0; i < ARRAY_SIZE(legs); i++)
         {
-            legs[i] = Leg(masterPins[i],slavePins[i],i%2 == 1);            
+            bool left = (i%2 == 1);//left legs are leg 1,3,5
+            bool oppositeSlave = !(i<4);//for first 4 legs the slave servo is positioned the opposite way
+            legs[i] = Leg(masterPins[i],slavePins[i],left,oppositeSlave);            
         }    
 
         //The other way for the first 2 legs
@@ -610,7 +621,7 @@ class Body
             legs[i].maxPos = 180 - MASTER_SERVO_MIN_POS;
             legs[i].minPos = 180 - MASTER_SERVO_MAX_POS;
             legs[i].upPos = 180 - SLAVE_UP_POSITION;
-            legs[i].slave.slaveBack = false;
+            //legs[i].slave.slaveBack = false;
         }       
         for(int i = 0; i< ARRAY_SIZE(legs);i++)
         {
