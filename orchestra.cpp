@@ -321,8 +321,8 @@ class Servo{
     //Changes value in the ChangePosition() method and then moves servo from currentPosition 
     //to the changed one by using GoToPosition() method
     volatile uint16_t msPosition;  
-    float velocity = MIN_VELOCITY;// is changed and calculated in CalculateVelocity() method
-
+    float velocity;// is changed and calculated in CalculateVelocity() method
+    bool slaveBack = true;
     uint16_t CalculateLeft(uint16_t pos)
     {
         int pos90 = map(90,0,180,SERVO_MIN_MS,SERVO_MAX_MS);
@@ -355,16 +355,27 @@ class Servo{
     public:
     bool done = true;   
     float position;//position given by the user
-    int currentPosition = (SERVO_MIN_MS + SERVO_MAX_MS)/2;
+    int currentPosition;
+    int maxVelocity;
+    int minVelocity;
+    bool enableSlave = false;
     Servo(uint8_t chosen_pin=0, bool leftServo = false)
     {
+        velocity = MIN_VELOCITY;
+        maxVelocity = MAX_VELOCITY;
+        minVelocity = MIN_VELOCITY;
+        currentPosition = (SERVO_MIN_MS + SERVO_MAX_MS)/2;
         if(chosen_pin<16 && chosen_pin>=2)
         {            
-            this->pin = chosen_pin;
+            pin = chosen_pin;
             ServoInit();
-            this->left = leftServo;
+            left = leftServo;
         }
 
+    }
+    void SlaveInit(bool sBack)
+    {
+        slaveBack = sBack;
     }
     void GoToPosition()
     {
@@ -390,8 +401,7 @@ class Servo{
                 done = true;
         }        
     }
-    int maxVelocity = MAX_VELOCITY;
-    int minVelocity = MIN_VELOCITY;
+    
     void ChangeVelocityLimits(int v)
     {
         minVelocity = v;
@@ -422,7 +432,7 @@ class Servo{
         position = pos;
         done = false;
     }
-   void Write(uint8_t newPosition)
+    void Write(uint8_t newPosition)
     {
         if(newPosition<=180 && newPosition>=0)
         {            
@@ -433,29 +443,7 @@ class Servo{
         }
     }
     
-    void Enable()
-    {
-        // Set the PWM running
-        pwm_set_enabled(slice_num, true);
-    }
-    void Disable()
-    {
-        // Set the PWM running
-        pwm_set_enabled(slice_num, false);
-    }
-};
-
-class SlaveServo:public Servo{
-    
-    public:
-    bool enableSlave = false;
-    bool slaveBack = true;
-    SlaveServo(uint8_t chosen_pin=0, bool leftServo = false, bool sBack = true)
-    :Servo(chosen_pin=0, leftServo = false)
-    {
-        slaveBack = sBack;
-    }
-     void SlavePosition(float pos)
+    void SlavePosition(float pos)
     {
         if(enableSlave)
         {
@@ -481,13 +469,24 @@ class SlaveServo:public Servo{
         return position;
     }
     
+    
+    void Enable()
+    {
+        // Set the PWM running
+        pwm_set_enabled(slice_num, true);
+    }
+    void Disable()
+    {
+        // Set the PWM running
+        pwm_set_enabled(slice_num, false);
+    }
 };
 
 class Leg
 {
     public:
     Servo master;
-    SlaveServo slave;    
+    Servo slave;    
     int maxPos = MASTER_SERVO_MAX_POS;
     int minPos = MASTER_SERVO_MIN_POS;
     int upPos = SLAVE_UP_POSITION;
@@ -503,7 +502,8 @@ class Leg
     public: Leg(int pinMaster = 2, int pinSlave = 3, bool leftLeg = false, bool sBack = true)
     {
         master = Servo(pinMaster, leftLeg);
-        slave = SlaveServo(pinSlave, leftLeg, sBack);
+        slave = Servo(pinSlave, leftLeg);
+        slave.SlaveInit(sBack);
     }
     void ChangeLegVelocityLimits(int v)
     {
@@ -958,7 +958,7 @@ int main()
     // body.legs[0].slave.Write(0);
     // sleep_ms(1000);
     // body.legs[0].slave.Write(90);
-    state = ResetMode;
+    state = Pos90Mode;
     body.StateChanged(state);
     
     gpio_init(16);
