@@ -23,7 +23,7 @@
 #define LED_VIN_LOW 26
 #define EN_VIN_CHECK 27
 #define VIN_CHECK_GPIO 28 
-#define VIN_CHECK_A_INPUT VIN_CHECK_GPIO-26
+#define VIN_CHECK_A_INPUT (VIN_CHECK_GPIO-26)
 
 #define LED_PIN 15
 
@@ -40,14 +40,32 @@
 #define POS_90_TIME 200 //time for the leg to move to 90* before the next starts to move (to lower the current)
 
 //Measure Battery
-#define RESISTOR_RATIO (147.0/47.0)
-#define RP_VOLTAGE 3.3
-#define ADC_MAX (1<<12)
-#define ADC_V 5 *4.7/14.7
-#define MIN_ADC_VALUE ADC_V*ADC_MAX/RP_VOLTAGE
+#define RESISTOR_3  4700 //kOHM
+#define RESISTOR_2 10000 //kOHM
+#define RP_VOLTAGE 3.3 //V
+#define MIN_BATTERY_VOLATAGE 7.0 //V
+#define ADC_MAX (1<<12) //12-bit
+#define RESISTOR_3_MIN_VOLTAGE (MIN_BATTERY_VOLATAGE / (RESISTOR_2 + RESISTOR_3) * RESISTOR_2)
+#define MIN_ADC_VALUE (RESISTOR_3_MIN_VOLTAGE * ADC_MAX / RP_VOLTAGE)
+
+//SERVO POSITIONS
 #define MASTER_SERVO_MIN_POS 100
 #define MASTER_SERVO_MAX_POS 130
-#define SLAVE_UP_POSITION 0
+#define SLAVE_UP_POSITION 5
+int8_t SERVO_CALIB[12] ={
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+};
 //States 
 enum State
     {
@@ -77,8 +95,8 @@ enum Mode
     ResetMode,
     Pos90Mode
 };
-Mode state = StopMode;
-State forwardStates[] = {
+Mode state = Pos90Mode;
+const State forwardStates[] = {
     Stop,
     Forward,
     MasterLoop,
@@ -93,7 +111,7 @@ State forwardStates[] = {
     Up2,
     SlaveLoop
 };
-State backStates[] = {
+const State backStates[] = {
     Stop,
     Forward,
     MasterLoop,
@@ -108,7 +126,7 @@ State backStates[] = {
     Down2,
     SlaveLoop
 };
-State leftStates[] = {    
+const State leftStates[] = {    
     Stop,
     Right,
     MasterLoop,
@@ -123,7 +141,7 @@ State leftStates[] = {
     Down2,
     SlaveLoop
 };
-State rightStates[] = {
+const State rightStates[] = {
     Stop,
     Right,//L1 Back
     MasterLoop,
@@ -138,7 +156,7 @@ State rightStates[] = {
     Up2,
     SlaveLoop
 };
-State resetStates[] = {
+const State resetStates[] = {
     Stop,
     ResetMaster,
     MasterLoop,
@@ -153,7 +171,7 @@ uint16_t map(float x, uint16_t sMin, uint16_t sMax, uint16_t dMin, uint16_t dMax
     }
 void SendFloat(int x){
     // Get battery voltage from ADC result
-    int batteryV = (int)(x * 100 * RP_VOLTAGE*RESISTOR_RATIO/(float)ADC_MAX);
+    int batteryV = (int)(x * 100 * RP_VOLTAGE*((RESISTOR_2+RESISTOR_3)/RESISTOR_3)/(float)ADC_MAX);
     char buff[5];      
     buff[0] = batteryV/100 + '0';
     buff[1] = '.';
@@ -171,9 +189,9 @@ void SendFloat(int x){
     
 }
 void on_uart_rx();
-void UART_INIT(int baud)
+void UART_INIT()
 {
-    uart_init(uart0, baud);
+    uart_init(uart0, BAUD_RATE);
 
     // Set the GPIO pin mux to the UART - 0 is TX, 1 is RX
     gpio_set_function(RX_PIN, GPIO_FUNC_UART);
@@ -315,6 +333,7 @@ class Servo{
     uint8_t pin;//given by the user in the constructor
     uint slice_num;//defined in ServoInit() method form the pin variable
     bool left = false; //if the servo is on the other side it has to move the opposite way -> left = true    
+    float calibrationValue = 0;
     //msPosition:
     //calculated from position in the Write() method of destination 
     //--------OR----- 
@@ -346,10 +365,10 @@ class Servo{
     void WriteMs()
     {
         if(left)
-        pwm_set_chan_level(this->slice_num, pwm_gpio_to_channel(this->pin), CalculateLeft(currentPosition));
+        pwm_set_chan_level(this->slice_num, pwm_gpio_to_channel(this->pin), CalculateLeft(currentPosition) + calibrationValue);
         else
         // Set channel output high for one cycle before dropping
-        pwm_set_chan_level(this->slice_num, pwm_gpio_to_channel(this->pin), currentPosition);
+        pwm_set_chan_level(this->slice_num, pwm_gpio_to_channel(this->pin), currentPosition + calibrationValue);
     }   
     
     public:
@@ -359,12 +378,13 @@ class Servo{
     int maxVelocity;
     int minVelocity;
     bool enableSlave = false;
-    Servo(uint8_t chosen_pin=0, bool leftServo = false)
+    Servo(uint8_t chosen_pin=0, bool leftServo = false, uint8_t calibration = 0)
     {
         velocity = MIN_VELOCITY;
         maxVelocity = MAX_VELOCITY;
         minVelocity = MIN_VELOCITY;
         currentPosition = (SERVO_MIN_MS + SERVO_MAX_MS)/2;
+        calibrationValue = calibration;
         if(chosen_pin<16 && chosen_pin>=2)
         {            
             pin = chosen_pin;
@@ -499,10 +519,11 @@ class Leg
         slave.Enable();
         slave.SlavePosition(master.position);        
     }
-    public: Leg(int pinMaster = 2, int pinSlave = 3, bool leftLeg = false, bool sBack = true)
+    public: 
+    Leg(int pinMaster = 2, int pinSlave = 3, bool leftLeg = false, bool sBack = true, uint8_t calibrationMaster = 0,uint8_t calibrationSlave = 0)
     {
-        master = Servo(pinMaster, leftLeg);
-        slave = Servo(pinSlave, leftLeg);
+        master = Servo(pinMaster, leftLeg,calibrationMaster);
+        slave = Servo(pinSlave, leftLeg, calibrationSlave);
         slave.SlaveInit(sBack);
     }
     void ChangeLegVelocityLimits(int v)
@@ -606,13 +627,13 @@ class Body
     Mode moveType = StopMode;
     int step = 0;
     bool reset = false;
-    Body(uint8_t masterPins[6], uint8_t slavePins[6])
+    Body(uint8_t masterPins[6], uint8_t slavePins[6], int8_t calibration[12])
     {
         for(int i = 0; i < ARRAY_SIZE(legs); i++)
         {
             bool left = (i%2 == 1);//left legs are leg 1,3,5
             bool oppositeSlave = !(i<4);//for first 4 legs the slave servo is positioned the opposite way
-            legs[i] = Leg(masterPins[i],slavePins[i],left,oppositeSlave);            
+            legs[i] = Leg(masterPins[i],slavePins[i],left,oppositeSlave, calibration[i*2],calibration[i*2+1]);            
         }    
 
         //The other way for the first 2 legs
@@ -931,7 +952,7 @@ int main()
 
     // gpio_put(25,1);
     // sleep_ms(500);
-    UART_INIT(9600);
+    UART_INIT();
     uart_puts(uart0, "Hello world!\n");
 
     // gpio_put(25,0);
@@ -954,27 +975,31 @@ int main()
     // gpio_put(25,0);
     // sleep_ms(500);
 
-    Body body(mser,sser);
+    Body body(mser,sser,SERVO_CALIB);
     // body.legs[0].slave.Write(0);
     // sleep_ms(1000);
     // body.legs[0].slave.Write(90);
-    state = Pos90Mode;
-    body.StateChanged(state);
-    
+    body.StateChanged(state);    
     gpio_init(16);
     // gpio_put(25,1);
     // sleep_ms(500);
     while(1)
     {
-        // if(MeasureBattery())
-        // {
-        //     body.DisableLegs();
-        // }
-        // else
+        if(MeasureBattery())
+        {
+            body.DisableLegs();
+            sleep_ms(10000);
+        }
+        else
         {
             if(velocityChanged)
             {
                 body.ChangeBodyVelocityLimits(velocity);
+            }
+            // enableProgram = MeasureBattery();
+            if(state != body.moveType)
+            {
+                body.StateChanged(state);
             }
             gpio_put(25,1);
             gpio_put(16,1);
@@ -988,11 +1013,7 @@ int main()
 
             gpio_put(25,0);
             gpio_put(16,0);
-            // enableProgram = MeasureBattery();
-            if(state != body.moveType)
-            {
-                body.StateChanged(state);
-            }
+            
         }
         // uart_puts(uart0, "Recieved:\n");
         // uart_putc(uart0,body.step + 48);
