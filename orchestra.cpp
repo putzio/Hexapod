@@ -52,19 +52,19 @@
 #define MASTER_SERVO_MIN_POS 100
 #define MASTER_SERVO_MAX_POS 130
 #define SLAVE_UP_POSITION 5
-int8_t SERVO_CALIB[12] ={
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0
+const int16_t SERVO_CALIB[12] ={
+    155,
+    -60,
+    -155,
+    -80,
+    20,
+    95,
+    -30,
+    60,
+    55,
+    -70,
+    90,
+    -50
 };
 //States 
 enum State
@@ -164,7 +164,7 @@ const State resetStates[] = {
     SlaveLoop,
     Stop   
 };
-volatile bool enableProgram = true;
+//volatile bool enableProgram = true;
 uint16_t map(float x, uint16_t sMin, uint16_t sMax, uint16_t dMin, uint16_t dMax )
     {
         return((x-(float)sMin) * (dMax - dMin) /(sMax - sMin) + dMin);
@@ -378,7 +378,7 @@ class Servo{
     int maxVelocity;
     int minVelocity;
     bool enableSlave = false;
-    Servo(uint8_t chosen_pin=0, bool leftServo = false, uint8_t calibration = 0)
+    Servo(uint8_t chosen_pin=0, bool leftServo = false, int16_t calibration = 0)
     {
         velocity = MIN_VELOCITY;
         maxVelocity = MAX_VELOCITY;
@@ -520,7 +520,7 @@ class Leg
         slave.SlavePosition(master.position);        
     }
     public: 
-    Leg(int pinMaster = 2, int pinSlave = 3, bool leftLeg = false, bool sBack = true, uint8_t calibrationMaster = 0,uint8_t calibrationSlave = 0)
+    Leg(int pinMaster = 2, int pinSlave = 3, bool leftLeg = false, bool sBack = true, int16_t calibrationMaster = 0,int16_t calibrationSlave = 0)
     {
         master = Servo(pinMaster, leftLeg,calibrationMaster);
         slave = Servo(pinSlave, leftLeg, calibrationSlave);
@@ -627,7 +627,7 @@ class Body
     Mode moveType = StopMode;
     int step = 0;
     bool reset = false;
-    Body(uint8_t masterPins[6], uint8_t slavePins[6], int8_t calibration[12])
+    Body(uint8_t masterPins[6], uint8_t slavePins[6], const int16_t calibration[12])
     {
         for(int i = 0; i < ARRAY_SIZE(legs); i++)
         {
