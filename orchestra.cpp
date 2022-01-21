@@ -359,7 +359,7 @@ class Servo{
     //to the changed one by using GoToPosition() method
     volatile uint16_t msPosition;  
     float velocity;// is changed and calculated in CalculateVelocity() method
-    bool slaveBack = true;
+    
     uint16_t CalculateLeft(uint16_t pos)
     {
         int pos90 = map(90,0,180,SERVO_MIN_MS,SERVO_MAX_MS);
@@ -395,7 +395,7 @@ class Servo{
     int currentPosition;
     int maxVelocity;
     int minVelocity;
-    bool enableSlave = false;
+    
     Servo(uint8_t chosen_pin=0, bool leftServo = false, int16_t calibration = 0)
     {
         velocity = MIN_VELOCITY;
@@ -411,10 +411,6 @@ class Servo{
             left = leftServo;
         }
 
-    }
-    void SlaveInit(bool sBack)
-    {
-        slaveBack = sBack;
     }
     void GoToPosition()
     {
@@ -483,16 +479,29 @@ class Servo{
         }
     }
     
-    void SlavePosition(float pos)
+    void Enable()
     {
-        if(enableSlave)
-        {
-            position = Calculate(pos);
-            Write(position);         
-        }        
+        // Set the PWM running
+        pwm_set_enabled(slice_num, true);
     }
-    
-    uint8_t Calculate(int pos)
+    void Disable()
+    {
+        // Set the PWM running
+        pwm_set_enabled(slice_num, false);
+    }
+};
+
+class SlaveServo: public Servo{
+    private:
+    bool slaveBack = true;    
+    public :
+    bool enableSlave = false;
+    SlaveServo(uint8_t chosen_pin=0, bool leftServo = false, int16_t calibration = 0, bool sBack = false)
+    :Servo(chosen_pin, leftServo, calibration)
+    {
+        slaveBack = sBack;
+    }
+     uint8_t Calculate(int pos)
     {
         float alfa =  pos - 90.0;     
         if(alfa < 0)
@@ -508,34 +517,22 @@ class Servo{
             position = 180.0 - asin(sinPosNAlfa)/rad + alfa;
         return position;
     }
-    
-    
-    void Enable()
+        void SlavePosition(float pos)
     {
-        // Set the PWM running
-        pwm_set_enabled(slice_num, true);
+        if(enableSlave)
+        {
+            position = Calculate(pos);
+            Write(position);         
+        }        
     }
-    void Disable()
-    {
-        // Set the PWM running
-        pwm_set_enabled(slice_num, false);
-    }
-};
-
-class SlaveServo: public Servo{
     
-    public :
-    SlaveServo(uint8_t chosen_pin=0, bool leftServo = false, int16_t calibration = 0, bool sBack = false)
-    :Servo(chosen_pin, leftServo, calibration){
-        slaveBack = sBack;
-    }
 };
 
 class Leg
 {
     public:
     Servo master;
-    Servo slave;    
+    SlaveServo slave;    
     int maxPos = MASTER_SERVO_MAX_POS;
     int minPos = MASTER_SERVO_MIN_POS;
     int upPos = SLAVE_UP_POSITION;
@@ -552,8 +549,7 @@ class Leg
     Leg(int pinMaster = 2, int pinSlave = 3, bool leftLeg = false, bool sBack = true, int16_t calibrationMaster = 0,int16_t calibrationSlave = 0)
     {
         master = Servo(pinMaster, leftLeg,calibrationMaster);
-        slave = Servo(pinSlave, leftLeg, calibrationSlave);
-        slave.SlaveInit(sBack);
+        slave = SlaveServo(pinSlave, leftLeg, calibrationSlave,sBack);
     }
     void ChangeLegVelocityLimits(int v)
     {
@@ -1047,78 +1043,54 @@ int main()
     // gpio_put(25,0);
     // sleep_ms(500);
 
-    SlaveServo s = SlaveServo(2,false,SERVO_CALIB[0],false);
-    s.Enable();
-    s.Write(90);
-    sleep_ms(100);
-    s.ChangePosition(120);
-    
+
+    Body body(mser,sser,SERVO_CALIB);
+    // body.legs[0].slave.Write(0);
+    // sleep_ms(1000);
+    // body.legs[0].slave.Write(90);
+    body.ModeChanged(mode);    
+    //mode = SlowMode;
+    gpio_init(16);
+    // gpio_put(25,1);
+    // sleep_ms(500);
     while(1)
     {
-        s.ChangePosition(120);
-        while(!s.done)
+        if(!MeasureBattery())
         {
-            s.GoToPosition();
-            sleep_ms(30);
+            body.DisableLegs();
+            sleep_ms(10000);
         }
-        s.ChangePosition(80);
-        while(!s.done)
+        else
         {
-            s.GoToPosition();
-            sleep_ms(30);
-        }
-        sleep_ms(1000);
-    }
+            if(velocityChanged)
+            {
+                body.ChangeBodyVelocityLimits(velocity);
+            }
+            // enableProgram = MeasureBattery();
+            if(mode != body.modeType)
+            {
+                body.ModeChanged(mode);
+            }
+            gpio_put(25,1);
+            gpio_put(16,1);
+            do
+            {
+                body.Move();
+                sleep_ms(20); //20
+            }
+            while(!body.MovesDone());
 
-
-//---------uncomment---------
-    // Body body(mser,sser,SERVO_CALIB);
-    // // body.legs[0].slave.Write(0);
-    // // sleep_ms(1000);
-    // // body.legs[0].slave.Write(90);
-    // body.ModeChanged(mode);    
-    // //mode = SlowMode;
-    // gpio_init(16);
-    // // gpio_put(25,1);
-    // // sleep_ms(500);
-    // while(1)
-    // {
-    //     if(!MeasureBattery())
-    //     {
-    //         body.DisableLegs();
-    //         sleep_ms(10000);
-    //     }
-    //     else
-    //     {
-    //         if(velocityChanged)
-    //         {
-    //             body.ChangeBodyVelocityLimits(velocity);
-    //         }
-    //         // enableProgram = MeasureBattery();
-    //         if(mode != body.modeType)
-    //         {
-    //             body.ModeChanged(mode);
-    //         }
-    //         gpio_put(25,1);
-    //         gpio_put(16,1);
-    //         do
-    //         {
-    //             body.Move();
-    //             sleep_ms(20); //20
-    //         }
-    //         while(!body.MovesDone());
-
-    //         gpio_put(25,0);
-    //         gpio_put(16,0);
+            gpio_put(25,0);
+            gpio_put(16,0);
             
-    //     }
-    //     // uart_puts(uart0, "Recieved:\n");
-    //     // uart_putc(uart0,body.step + 48);
-    //     // uart_puts(uart0, "\n");
+        }
+        // uart_puts(uart0, "Recieved:\n");
+        // uart_putc(uart0,body.step + 48);
+        // uart_puts(uart0, "\n");
         
-    //     sleep_ms(100);
+        sleep_ms(100);
 
-    // }
+    }
 }
 
 
