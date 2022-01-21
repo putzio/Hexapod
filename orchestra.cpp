@@ -24,6 +24,7 @@
 #define EN_VIN_CHECK 27
 #define VIN_CHECK_GPIO 28 
 #define VIN_CHECK_A_INPUT (VIN_CHECK_GPIO-26)
+#define BUILD_IN_LED 25
 
 #define LED_PIN 15
 
@@ -44,8 +45,8 @@
 #define RESISTOR_2 10000 //kOHM
 #define RP_VOLTAGE 3.3 //V
 #define MIN_BATTERY_VOLATAGE 7.0 //V
-#define ADC_MAX (1<<12) //12-bit
-#define RESISTOR_3_MIN_VOLTAGE (MIN_BATTERY_VOLATAGE / (RESISTOR_2 + RESISTOR_3) * RESISTOR_2)
+#define ADC_MAX 4096 //12-bit
+#define RESISTOR_3_MIN_VOLTAGE (MIN_BATTERY_VOLATAGE / (RESISTOR_2 + RESISTOR_3) * RESISTOR_3)
 #define MIN_ADC_VALUE (RESISTOR_3_MIN_VOLTAGE * ADC_MAX / RP_VOLTAGE)
 
 //SERVO POSITIONS
@@ -83,7 +84,8 @@ enum State
         Left,
         Right,
         ResetMaster,
-        ResetSlave
+        ResetSlave,
+        SlowMove
     };
 enum Mode 
 {
@@ -93,9 +95,10 @@ enum Mode
     LeftMode,
     RightMode,
     ResetMode,
-    Pos90Mode
+    Pos90Mode,
+    SlowMode
 };
-Mode state = Pos90Mode;
+Mode mode = Pos90Mode;
 const State forwardStates[] = {
     Stop,
     Forward,
@@ -164,12 +167,22 @@ const State resetStates[] = {
     SlaveLoop,
     Stop   
 };
+const State pos90States[] = {
+    Stop,
+    SlaveLoop,
+    Stop
+};
+const State slowMoveStates[] ={
+    Stop,
+    SlaveLoop,
+    SlowMove
+};
 //volatile bool enableProgram = true;
 uint16_t map(float x, uint16_t sMin, uint16_t sMax, uint16_t dMin, uint16_t dMax )
     {
         return((x-(float)sMin) * (dMax - dMin) /(sMax - sMin) + dMin);
     }
-void SendFloat(int x){
+void SendFloat(uint16_t x){
     // Get battery voltage from ADC result
     int batteryV = (int)(x * 100 * RP_VOLTAGE*((RESISTOR_2+RESISTOR_3)/RESISTOR_3)/(float)ADC_MAX);
     char buff[5];      
@@ -188,7 +201,7 @@ void SendFloat(int x){
     uart_puts(uart0, "\n");
     
 }
-void on_uart_rx();
+void OnUartRx();
 void UART_INIT()
 {
     uart_init(uart0, BAUD_RATE);
@@ -204,7 +217,7 @@ void UART_INIT()
     int UART_IRQ = UART_ID == uart0 ? UART0_IRQ : UART1_IRQ;
 
     // And set up and enable the interrupt handlers
-    irq_set_exclusive_handler(UART_IRQ, on_uart_rx);
+    irq_set_exclusive_handler(UART_IRQ, OnUartRx);
     irq_set_enabled(UART_IRQ, true);
 
     // Now enable the UART to send interrupts - RX only
@@ -213,17 +226,17 @@ void UART_INIT()
 bool changeVelocity = false;
 int velocity = MIN_VELOCITY;
 bool velocityChanged = false;
-void on_uart_rx() {
+void OnUartRx() {
     //----------getting the robot moves-----------------
     
     while (uart_is_readable(UART_ID)) {
-        char mode = uart_getc(UART_ID);
+        char recMode = uart_getc(UART_ID);
         uart_puts(uart0, "Recieved:\n");
-        uart_putc(uart0,mode);
+        uart_putc(uart0,recMode);
         uart_puts(uart0, "\n");
         if(changeVelocity)
         {
-            if(mode == '&')
+            if(recMode == '&')
             {
                 velocityChanged = true;
                 changeVelocity = false;
@@ -231,34 +244,34 @@ void on_uart_rx() {
             else
             {
                 velocity *=10;
-                velocity += (int)mode - 48;
+                velocity += (int)recMode - 48;
             }
             
         }
         else
         {
-            switch (mode)
+            switch (recMode)
             {
                 case 'f':
-                    state = ForwardMode;
+                    mode = ForwardMode;
                     break;
                 case 'b':
-                    state = BackMode;
+                    mode = BackMode;
                     break;
                 case 'l':
-                    state = LeftMode;
+                    mode = LeftMode;
                     break;
                 case 'r':
-                    state = RightMode;
+                    mode = RightMode;
                     break;
                 case 's':
-                    state = StopMode;
+                    mode = StopMode;
                     break;
                 case 'R':
-                    state = ResetMode;
+                    mode = ResetMode;
                     break;
                 case 'P':
-                    state = Pos90Mode;
+                    mode = Pos90Mode;
                     break;
                 case 'V':
                 {
@@ -301,10 +314,11 @@ void ADC_INIT()
     //gpio_put(LED_VIN_LOW,1);
     gpio_init(EN_VIN_CHECK);
     gpio_set_dir(EN_VIN_CHECK, GPIO_OUT);    
+    gpio_init(BUILD_IN_LED);
+    gpio_set_dir(BUILD_IN_LED, GPIO_OUT);  
 }
 bool MeasureBattery()
 {
-    bool enableProgram;
     //turn on the transistor    
     gpio_put(EN_VIN_CHECK,1);    
     sleep_ms(100);
@@ -312,20 +326,24 @@ bool MeasureBattery()
     uint16_t result = adc_read();
     gpio_put(EN_VIN_CHECK,0);    
     //SendFloat(result);
+    SendFloat(result);
+     uart_puts(uart0, "Recieved:\n");
+        uart_putc(uart0,result);
+        uart_puts(uart0, "\n");
     if(result < MIN_ADC_VALUE)
     {
         for(int i = 0; i < 3; i++)
         {
             gpio_put(LED_VIN_LOW,1);
+            gpio_put(BUILD_IN_LED,1);
             sleep_ms(500);
             gpio_put(LED_VIN_LOW,0);
+            gpio_put(BUILD_IN_LED,0);
             sleep_ms(500);
         }
-        enableProgram = false;
-    }
-    else 
-        enableProgram = true;
-    return enableProgram;
+        return false;
+    }    
+    return true;
 }
 
 class Servo{
@@ -372,7 +390,7 @@ class Servo{
     }   
     
     public:
-    bool done = true;   
+    bool done;   
     float position;//position given by the user
     int currentPosition;
     int maxVelocity;
@@ -385,6 +403,7 @@ class Servo{
         minVelocity = MIN_VELOCITY;
         currentPosition = (SERVO_MIN_MS + SERVO_MAX_MS)/2;
         calibrationValue = calibration;
+        done = true;
         if(chosen_pin<16 && chosen_pin>=2)
         {            
             pin = chosen_pin;
@@ -425,6 +444,7 @@ class Servo{
     void ChangeVelocityLimits(int v)
     {
         minVelocity = v;
+        maxVelocity = 3*v+5;
     }
     void CalculateVelocity()
     {
@@ -502,6 +522,15 @@ class Servo{
     }
 };
 
+class SlaveServo: public Servo{
+    
+    public :
+    SlaveServo(uint8_t chosen_pin=0, bool leftServo = false, int16_t calibration = 0, bool sBack = false)
+    :Servo(chosen_pin, leftServo, calibration){
+        slaveBack = sBack;
+    }
+};
+
 class Leg
 {
     public:
@@ -549,7 +578,7 @@ class Leg
         master.ChangePosition(pos);
         slave.enableSlave = slaveEnabled;
     }    
-    void GoToPosition()
+    void GoToPositionMaster()
     {
         master.GoToPosition();
         slave.SlavePosition(map(master.currentPosition,SERVO_MIN_MS,SERVO_MAX_MS,0.0,180.0));
@@ -558,9 +587,12 @@ class Leg
     {
         slave.ChangePosition(pos);
     }
-    void GoToPositionSlave()
+    void GoToPosition()
     {
-        slave.GoToPosition();
+        if(!master.done)
+            master.GoToPosition();
+        if(!slave.done)
+            slave.GoToPosition();
     }
     
     void ChooseMove(State s, bool enableSlave)
@@ -593,12 +625,12 @@ class Leg
     {
         if(!master.done)
         {
-            GoToPosition();
+            GoToPositionMaster();
             return false;
         }
         else if (!slave.done)
         {
-            GoToPositionSlave();
+            GoToPosition();
             return false;
         }
         else
@@ -617,14 +649,17 @@ class Leg
         slave.Disable();
     }
 };
+
 class Body
 {
-    public:
-    Leg legs[6];
+    private:
     uint8_t legTeam1[3] = {0,3,4};
-    uint8_t legTeam2[3] = {1,2,5};   
+    uint8_t legTeam2[3] = {1,2,5}; 
     State movingStates[ARRAY_SIZE(forwardStates)];
-    Mode moveType = StopMode;
+    Leg legs[6]; 
+    uint8_t slowModeLegMove = 0;//leg:0-5 is movedover the ground
+    public:    
+    Mode modeType = StopMode;
     int step = 0;
     bool reset = false;
     Body(uint8_t masterPins[6], uint8_t slavePins[6], const int16_t calibration[12])
@@ -663,7 +698,7 @@ class Body
         {
             movingStates[i] = forwardStates [i];
         }
-        moveType = ForwardMode;
+        modeType = ForwardMode;
         step = 1;
         if(reset == false)
         {
@@ -678,7 +713,7 @@ class Body
         {
             movingStates[i] = backStates [i];
         }
-        moveType = BackMode;
+        modeType = BackMode;
         step = 1;
         if(reset == false)
         {
@@ -693,7 +728,7 @@ class Body
         {
             movingStates[i] = leftStates [i];
         }
-        moveType = LeftMode;
+        modeType = LeftMode;
         step = 1;
         if(reset == false)
         {
@@ -708,7 +743,7 @@ class Body
         {
             movingStates[i] = rightStates [i];
         }
-        moveType = RightMode;
+        modeType = RightMode;
         step = 1;
         if(reset == false)
         {
@@ -720,7 +755,7 @@ class Body
     void ChangeToStop()
     {
         step = 0;
-        moveType = StopMode;
+        modeType = StopMode;
     }
     void ChangeToReset()
     {
@@ -728,7 +763,7 @@ class Body
         {
             movingStates[i] = resetStates [i];
         }
-        moveType = ResetMode;
+        modeType = ResetMode;
         step = 1;
     }
     void ChangeToResetTemp()
@@ -741,16 +776,27 @@ class Body
     }
     void ChangeTo90()
     {
-        step = 0;
-        moveType = Pos90Mode;
+        for (int i = 0; i < ARRAY_SIZE(pos90States); i++)
+        {
+            movingStates[i] = pos90States[i];
+        }
+        step = 1;
+        modeType = Pos90Mode;
         for(int i = 0; i < ARRAY_SIZE(legs); i++)
         {
-            legs[i].master.Write(90);
-            legs[i].slave.Write(90);
-            sleep_ms(POS_90_TIME);
+            legs[i].ChangePosition(90,false);
+            legs[i].ChangePositionSlave(90);
         }
     }
-
+    void ChangeToSlow()
+    {
+        modeType = SlowMode;
+        for (int i = 0; i < ARRAY_SIZE(slowMoveStates); i++)
+        {
+            movingStates[i] = slowMoveStates[i];
+        }
+        step = 2;
+    }
     void Move()
     {        
         switch(movingStates[step])
@@ -758,9 +804,9 @@ class Body
             case Stop:
             {
                 //if ChangeToResetTemp(), the robot is already reset, so we can move on
-                if(moveType != ResetMode && reset == true)
+                if(modeType != ResetMode && reset == true)
                 {
-                    StateChanged(moveType);
+                    ModeChanged(modeType);
                 }
 
                 break;
@@ -782,7 +828,8 @@ class Body
             }
             case Forward:
             {
-                bool back = (moveType == BackMode);//Forward => false
+                //1st leg is moving forward
+                bool back = (modeType == BackMode);//Forward => false
                 for(int i = 0; i<ARRAY_SIZE(legTeam1); i++)
                 {                    
                     legs[legTeam1[i]].ChooseMove(Forward, back);//Forward => false
@@ -794,7 +841,7 @@ class Body
             case MasterLoop:
             {                
                 for(int i = 0; i< ARRAY_SIZE(legs);i++)
-                    legs[i].GoToPosition();
+                    legs[i].GoToPositionMaster();
                 if(MovesDone())
                     step++;         
                 break;
@@ -811,7 +858,7 @@ class Body
             case SlaveLoop:
             {
                 for(int i = 0; i< ARRAY_SIZE(legs);i++)
-                    legs[i].GoToPositionSlave();
+                    legs[i].GoToPosition();
                 if(MovesDone())
                     step++;        
                 break;
@@ -827,7 +874,8 @@ class Body
             }
             case Back:
             {
-                bool forward = (moveType == ForwardMode);//Forward => true
+                //1st leg is moving back
+                bool forward = (modeType == ForwardMode);//Forward => true
                 for(int i = 0; i<ARRAY_SIZE(legTeam1); i++)
                 {
                     legs[legTeam1[i]].ChooseMove(Back, forward);//Forward => true
@@ -859,7 +907,7 @@ class Body
             case  Left:
             {
                 
-                bool right = (moveType == RightMode);
+                bool right = (modeType == RightMode);
                 legs[0].ChooseMove(Forward, right);
                 legs[1].ChooseMove(Forward, !right);
                 legs[2].ChooseMove(Back, !right);
@@ -871,7 +919,7 @@ class Body
             }
             case  Right:
             {
-                bool right = (moveType == RightMode);
+                bool right = (modeType == RightMode);
                 legs[0].ChooseMove(Back, !right);
                 legs[1].ChooseMove(Back, right);
                 legs[2].ChooseMove(Forward, right);
@@ -879,6 +927,24 @@ class Body
                 legs[4].ChooseMove(Back, !right);
                 legs[5].ChooseMove(Back, right);
                 step++;
+                break;
+            }
+            //SlowMove
+            case SlowMove:
+            {
+
+                for(int i = 0; i<ARRAY_SIZE(legs); i++)
+                {
+                    legs[i].ChooseMove(Back,true);
+                    legs[i].ChangeLegVelocityLimits(1);
+                }
+                legs[slowModeLegMove].ChooseMove(Up,true);
+                legs[slowModeLegMove].ChooseMove(Forward,false);
+                legs[slowModeLegMove].ChangeLegVelocityLimits(6);
+                slowModeLegMove++;
+                if(slowModeLegMove>5)
+                slowModeLegMove = 0;
+                step--;
                 break;
             }
         }
@@ -894,7 +960,7 @@ class Body
         }
         return true;
     }
-    void StateChanged(Mode s)
+    void ModeChanged(Mode s)
     {        
         switch(s)
         {
@@ -933,6 +999,11 @@ class Body
                 ChangeTo90();
                 break;                
             }
+            case SlowMode:
+            {
+                ChangeToSlow();
+                break;
+            }
         }
     }
     void DisableLegs()
@@ -943,6 +1014,7 @@ class Body
         }
     }
 };
+
 int main() 
 {
     stdio_init_all();
@@ -975,53 +1047,78 @@ int main()
     // gpio_put(25,0);
     // sleep_ms(500);
 
-    Body body(mser,sser,SERVO_CALIB);
-    // body.legs[0].slave.Write(0);
-    // sleep_ms(1000);
-    // body.legs[0].slave.Write(90);
-    body.StateChanged(state);    
-    gpio_init(16);
-    // gpio_put(25,1);
-    // sleep_ms(500);
+    SlaveServo s = SlaveServo(2,false,SERVO_CALIB[0],false);
+    s.Enable();
+    s.Write(90);
+    sleep_ms(100);
+    s.ChangePosition(120);
+    
     while(1)
     {
-        if(MeasureBattery())
+        s.ChangePosition(120);
+        while(!s.done)
         {
-            body.DisableLegs();
-            sleep_ms(10000);
+            s.GoToPosition();
+            sleep_ms(30);
         }
-        else
+        s.ChangePosition(80);
+        while(!s.done)
         {
-            if(velocityChanged)
-            {
-                body.ChangeBodyVelocityLimits(velocity);
-            }
-            // enableProgram = MeasureBattery();
-            if(state != body.moveType)
-            {
-                body.StateChanged(state);
-            }
-            gpio_put(25,1);
-            gpio_put(16,1);
-            // int i = 0;
-            do
-            {
-                body.Move();
-                sleep_ms(20); 
-            }
-            while(!body.MovesDone());
-
-            gpio_put(25,0);
-            gpio_put(16,0);
-            
+            s.GoToPosition();
+            sleep_ms(30);
         }
-        // uart_puts(uart0, "Recieved:\n");
-        // uart_putc(uart0,body.step + 48);
-        // uart_puts(uart0, "\n");
-        
-        sleep_ms(100);
-
+        sleep_ms(1000);
     }
+
+
+//---------uncomment---------
+    // Body body(mser,sser,SERVO_CALIB);
+    // // body.legs[0].slave.Write(0);
+    // // sleep_ms(1000);
+    // // body.legs[0].slave.Write(90);
+    // body.ModeChanged(mode);    
+    // //mode = SlowMode;
+    // gpio_init(16);
+    // // gpio_put(25,1);
+    // // sleep_ms(500);
+    // while(1)
+    // {
+    //     if(!MeasureBattery())
+    //     {
+    //         body.DisableLegs();
+    //         sleep_ms(10000);
+    //     }
+    //     else
+    //     {
+    //         if(velocityChanged)
+    //         {
+    //             body.ChangeBodyVelocityLimits(velocity);
+    //         }
+    //         // enableProgram = MeasureBattery();
+    //         if(mode != body.modeType)
+    //         {
+    //             body.ModeChanged(mode);
+    //         }
+    //         gpio_put(25,1);
+    //         gpio_put(16,1);
+    //         do
+    //         {
+    //             body.Move();
+    //             sleep_ms(20); //20
+    //         }
+    //         while(!body.MovesDone());
+
+    //         gpio_put(25,0);
+    //         gpio_put(16,0);
+            
+    //     }
+    //     // uart_puts(uart0, "Recieved:\n");
+    //     // uart_putc(uart0,body.step + 48);
+    //     // uart_puts(uart0, "\n");
+        
+    //     sleep_ms(100);
+
+    // }
 }
 
 
