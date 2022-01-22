@@ -85,7 +85,6 @@ enum State
         Right,
         ResetMaster,
         ResetSlave,
-        SlowMove
     };
 enum Mode 
 {
@@ -96,7 +95,6 @@ enum Mode
     RightMode,
     ResetMode,
     Pos90Mode,
-    SlowMode
 };
 Mode mode = Pos90Mode;
 const State forwardStates[] = {
@@ -172,35 +170,13 @@ const State pos90States[] = {
     SlaveLoop,
     Stop
 };
-const State slowMoveStates[] ={
-    Stop,
-    SlaveLoop,
-    SlowMove
-};
+
 //volatile bool enableProgram = true;
 uint16_t map(float x, uint16_t sMin, uint16_t sMax, uint16_t dMin, uint16_t dMax )
     {
         return((x-(float)sMin) * (dMax - dMin) /(sMax - sMin) + dMin);
     }
-void SendFloat(uint16_t x){
-    // Get battery voltage from ADC result
-    int batteryV = (int)(x * 100 * RP_VOLTAGE*((RESISTOR_2+RESISTOR_3)/RESISTOR_3)/(float)ADC_MAX);
-    char buff[5];      
-    buff[0] = batteryV/100 + '0';
-    buff[1] = '.';
-    batteryV/=10;
-    buff[2] = batteryV/10 + '0';
-    buff[3] = batteryV%10 + '0';
-    buff[4] = 'V';
-    uart_puts(uart0, "\n");
-    uart_puts(uart0, "Battery Voltage:\n");
-    for(int i = 0 ; i < ARRAY_SIZE(buff) ;i++)
-        {            
-            uart_putc(uart0, (char)(buff[i]));            
-        }
-    uart_puts(uart0, "\n");
-    
-}
+
 void OnUartRx();
 void UART_INIT()
 {
@@ -325,11 +301,6 @@ bool MeasureBattery()
     //measure voltage   
     uint16_t result = adc_read();
     gpio_put(EN_VIN_CHECK,0);    
-    //SendFloat(result);
-    SendFloat(result);
-     uart_puts(uart0, "Recieved:\n");
-        uart_putc(uart0,result);
-        uart_puts(uart0, "\n");
     if(result < MIN_ADC_VALUE)
     {
         for(int i = 0; i < 3; i++)
@@ -501,9 +472,9 @@ class SlaveServo: public Servo{
     {
         slaveBack = sBack;
     }
-     uint8_t Calculate(int pos)
+    uint8_t Calculate(int masterPosition)
     {
-        float alfa =  pos - 90.0;     
+        float alfa =  masterPosition - 90.0;     
         if(alfa < 0)
             alfa = - alfa;
         float rad = 3.1415/180.0;
@@ -517,11 +488,12 @@ class SlaveServo: public Servo{
             position = 180.0 - asin(sinPosNAlfa)/rad + alfa;
         return position;
     }
-        void SlavePosition(float pos)
+    //sets SlaveServo at the right position, so the leg heigth does not change
+    void SlavePosition(float masterPosition)
     {
         if(enableSlave)
         {
-            position = Calculate(pos);
+            position = Calculate(masterPosition);
             Write(position);         
         }        
     }
@@ -550,12 +522,20 @@ class Leg
     {
         master = Servo(pinMaster, leftLeg,calibrationMaster);
         slave = SlaveServo(pinSlave, leftLeg, calibrationSlave,sBack);
+        if(!sBack)
+        {
+            maxPos = 180 - MASTER_SERVO_MIN_POS;
+            minPos = 180 - MASTER_SERVO_MAX_POS;
+            upPos = 180 - SLAVE_UP_POSITION;
+        }
     }
     void ChangeLegVelocityLimits(int v)
     {
         master.ChangeVelocityLimits(v);
         slave.ChangeVelocityLimits(v);
     }
+    //Writes master position and if the slave is enabled slave adjusts its angle, 
+    //so the height of the leg does not change
     void WriteMaster(int position, bool slaveEnabled)
     {
         master.Write(position);
@@ -569,20 +549,24 @@ class Leg
             slave.enableSlave = false;
         }
     }
+    //Changes the desired position of the master
     void ChangePosition(uint8_t pos, bool slaveEnabled)
     {
         master.ChangePosition(pos);
         slave.enableSlave = slaveEnabled;
     }    
+
     void GoToPositionMaster()
     {
         master.GoToPosition();
         slave.SlavePosition(map(master.currentPosition,SERVO_MIN_MS,SERVO_MAX_MS,0.0,180.0));
     }
+    //Changes only Slave desired position
     void ChangePositionSlave(uint8_t pos)
     {
         slave.ChangePosition(pos);
     }
+    //Both servos are getting closer to the position set in ChangePosition()
     void GoToPosition()
     {
         if(!master.done)
@@ -591,6 +575,7 @@ class Leg
             slave.GoToPosition();
     }
     
+    //automatically change position depending on the State, enableSlave and Leg properties (minPos, maxPos, upPos)
     void ChooseMove(State s, bool enableSlave)
     {
         switch(s)
@@ -666,15 +651,7 @@ class Body
             bool oppositeSlave = !(i<4);//for first 4 legs the slave servo is positioned the opposite way
             legs[i] = Leg(masterPins[i],slavePins[i],left,oppositeSlave, calibration[i*2],calibration[i*2+1]);            
         }    
-
-        //The other way for the first 2 legs
-        for(int i = 0; i< 4; i++)
-        {
-            legs[i].maxPos = 180 - MASTER_SERVO_MIN_POS;
-            legs[i].minPos = 180 - MASTER_SERVO_MAX_POS;
-            legs[i].upPos = 180 - SLAVE_UP_POSITION;
-            //legs[i].slave.slaveBack = false;
-        }       
+     
         for(int i = 0; i< ARRAY_SIZE(legs);i++)
         {
             legs[i].initLeg();
@@ -783,15 +760,6 @@ class Body
             legs[i].ChangePosition(90,false);
             legs[i].ChangePositionSlave(90);
         }
-    }
-    void ChangeToSlow()
-    {
-        modeType = SlowMode;
-        for (int i = 0; i < ARRAY_SIZE(slowMoveStates); i++)
-        {
-            movingStates[i] = slowMoveStates[i];
-        }
-        step = 2;
     }
     void Move()
     {        
@@ -925,24 +893,6 @@ class Body
                 step++;
                 break;
             }
-            //SlowMove
-            case SlowMove:
-            {
-
-                for(int i = 0; i<ARRAY_SIZE(legs); i++)
-                {
-                    legs[i].ChooseMove(Back,true);
-                    legs[i].ChangeLegVelocityLimits(1);
-                }
-                legs[slowModeLegMove].ChooseMove(Up,true);
-                legs[slowModeLegMove].ChooseMove(Forward,false);
-                legs[slowModeLegMove].ChangeLegVelocityLimits(6);
-                slowModeLegMove++;
-                if(slowModeLegMove>5)
-                slowModeLegMove = 0;
-                step--;
-                break;
-            }
         }
         if(step >= ARRAY_SIZE(movingStates))
             step = 1;
@@ -995,11 +945,6 @@ class Body
                 ChangeTo90();
                 break;                
             }
-            case SlowMode:
-            {
-                ChangeToSlow();
-                break;
-            }
         }
     }
     void DisableLegs()
@@ -1015,22 +960,13 @@ int main()
 {
     stdio_init_all();
 
-    gpio_init(25);
-    gpio_set_dir(25, GPIO_OUT);
+    gpio_init(BUILD_IN_LED);
+    gpio_set_dir(BUILD_IN_LED, GPIO_OUT);
 
-    // gpio_put(25,1);
-    // sleep_ms(500);
     UART_INIT();
-    uart_puts(uart0, "Hello world!\n");
-
-    // gpio_put(25,0);
-    // sleep_ms(500);
     
     ADC_INIT();
     MeasureBattery();
-    
-    // gpio_put(25,1);
-    // sleep_ms(500);
 
     uint8_t mser[6],sser[6];
     for(int i = 0; i < ARRAY_SIZE(mser); i++)
@@ -1038,21 +974,12 @@ int main()
         mser[i] = 2*(i + 1);//(i+1) because we start at gpio 2
         sser[i] = 2*(i + 1) + 1;
     }
-    // sleep_ms(2000);
-    
-    // gpio_put(25,0);
-    // sleep_ms(500);
-
 
     Body body(mser,sser,SERVO_CALIB);
-    // body.legs[0].slave.Write(0);
-    // sleep_ms(1000);
-    // body.legs[0].slave.Write(90);
-    body.ModeChanged(mode);    
-    //mode = SlowMode;
-    gpio_init(16);
-    // gpio_put(25,1);
-    // sleep_ms(500);
+    
+    if(MeasureBattery())
+        body.ModeChanged(mode); 
+    
     while(1)
     {
         if(!MeasureBattery())
@@ -1071,8 +998,7 @@ int main()
             {
                 body.ModeChanged(mode);
             }
-            gpio_put(25,1);
-            gpio_put(16,1);
+            gpio_put(BUILD_IN_LED,1);
             do
             {
                 body.Move();
@@ -1080,36 +1006,9 @@ int main()
             }
             while(!body.MovesDone());
 
-            gpio_put(25,0);
-            gpio_put(16,0);
+            gpio_put(BUILD_IN_LED,0);
             
         }
-        // uart_puts(uart0, "Recieved:\n");
-        // uart_putc(uart0,body.step + 48);
-        // uart_puts(uart0, "\n");
-        
-        sleep_ms(100);
-
+        sleep_ms(20);
     }
 }
-
-
-/*
-1. włącz/wyłącz slave w zależności od up, down
-2. 
-
-tryby pracy:
-łydka góra/dół
-->włącz/wyłącz slave w zależności od up, down
-->Set/Reset enableSlave
-
-udo przód/tył
-
-F,B,L,R
-L[0] up, L[1] down...
-foreach(leg)
-switch(state)
-{
-
-}
-*/
