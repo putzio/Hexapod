@@ -106,6 +106,19 @@ depend:
 .PHONY : depend
 
 #=============================================================================
+# Target rules for targets named orchestra-lib
+
+# Build rule for target.
+orchestra-lib: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 /nologo -$(MAKEFLAGS) orchestra-lib
+.PHONY : orchestra-lib
+
+# fast build rule for target.
+orchestra-lib\fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\build
+.PHONY : orchestra-lib\fast
+
+#=============================================================================
 # Target rules for targets named orchestra
 
 # Build rule for target.
@@ -175,6 +188,7 @@ C_\PICO\pico-sdk\src\common\pico_sync\critical_section.obj: C_\PICO\pico-sdk\src
 
 # target to build an object file
 C_\PICO\pico-sdk\src\common\pico_sync\critical_section.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\common\pico_sync\critical_section.c.obj
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\common\pico_sync\critical_section.c.obj
 .PHONY : C_\PICO\pico-sdk\src\common\pico_sync\critical_section.c.obj
 
@@ -183,6 +197,7 @@ C_\PICO\pico-sdk\src\common\pico_sync\critical_section.i: C_\PICO\pico-sdk\src\c
 
 # target to preprocess a source file
 C_\PICO\pico-sdk\src\common\pico_sync\critical_section.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\common\pico_sync\critical_section.c.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\common\pico_sync\critical_section.c.i
 .PHONY : C_\PICO\pico-sdk\src\common\pico_sync\critical_section.c.i
 
@@ -191,6 +206,7 @@ C_\PICO\pico-sdk\src\common\pico_sync\critical_section.s: C_\PICO\pico-sdk\src\c
 
 # target to generate assembly for a file
 C_\PICO\pico-sdk\src\common\pico_sync\critical_section.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\common\pico_sync\critical_section.c.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\common\pico_sync\critical_section.c.s
 .PHONY : C_\PICO\pico-sdk\src\common\pico_sync\critical_section.c.s
 
@@ -199,6 +215,7 @@ C_\PICO\pico-sdk\src\common\pico_sync\lock_core.obj: C_\PICO\pico-sdk\src\common
 
 # target to build an object file
 C_\PICO\pico-sdk\src\common\pico_sync\lock_core.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\common\pico_sync\lock_core.c.obj
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\common\pico_sync\lock_core.c.obj
 .PHONY : C_\PICO\pico-sdk\src\common\pico_sync\lock_core.c.obj
 
@@ -207,6 +224,7 @@ C_\PICO\pico-sdk\src\common\pico_sync\lock_core.i: C_\PICO\pico-sdk\src\common\p
 
 # target to preprocess a source file
 C_\PICO\pico-sdk\src\common\pico_sync\lock_core.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\common\pico_sync\lock_core.c.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\common\pico_sync\lock_core.c.i
 .PHONY : C_\PICO\pico-sdk\src\common\pico_sync\lock_core.c.i
 
@@ -215,6 +233,7 @@ C_\PICO\pico-sdk\src\common\pico_sync\lock_core.s: C_\PICO\pico-sdk\src\common\p
 
 # target to generate assembly for a file
 C_\PICO\pico-sdk\src\common\pico_sync\lock_core.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\common\pico_sync\lock_core.c.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\common\pico_sync\lock_core.c.s
 .PHONY : C_\PICO\pico-sdk\src\common\pico_sync\lock_core.c.s
 
@@ -223,6 +242,7 @@ C_\PICO\pico-sdk\src\common\pico_sync\mutex.obj: C_\PICO\pico-sdk\src\common\pic
 
 # target to build an object file
 C_\PICO\pico-sdk\src\common\pico_sync\mutex.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\common\pico_sync\mutex.c.obj
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\common\pico_sync\mutex.c.obj
 .PHONY : C_\PICO\pico-sdk\src\common\pico_sync\mutex.c.obj
 
@@ -231,6 +251,7 @@ C_\PICO\pico-sdk\src\common\pico_sync\mutex.i: C_\PICO\pico-sdk\src\common\pico_
 
 # target to preprocess a source file
 C_\PICO\pico-sdk\src\common\pico_sync\mutex.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\common\pico_sync\mutex.c.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\common\pico_sync\mutex.c.i
 .PHONY : C_\PICO\pico-sdk\src\common\pico_sync\mutex.c.i
 
@@ -239,6 +260,7 @@ C_\PICO\pico-sdk\src\common\pico_sync\mutex.s: C_\PICO\pico-sdk\src\common\pico_
 
 # target to generate assembly for a file
 C_\PICO\pico-sdk\src\common\pico_sync\mutex.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\common\pico_sync\mutex.c.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\common\pico_sync\mutex.c.s
 .PHONY : C_\PICO\pico-sdk\src\common\pico_sync\mutex.c.s
 
@@ -247,6 +269,7 @@ C_\PICO\pico-sdk\src\common\pico_sync\sem.obj: C_\PICO\pico-sdk\src\common\pico_
 
 # target to build an object file
 C_\PICO\pico-sdk\src\common\pico_sync\sem.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\common\pico_sync\sem.c.obj
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\common\pico_sync\sem.c.obj
 .PHONY : C_\PICO\pico-sdk\src\common\pico_sync\sem.c.obj
 
@@ -255,6 +278,7 @@ C_\PICO\pico-sdk\src\common\pico_sync\sem.i: C_\PICO\pico-sdk\src\common\pico_sy
 
 # target to preprocess a source file
 C_\PICO\pico-sdk\src\common\pico_sync\sem.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\common\pico_sync\sem.c.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\common\pico_sync\sem.c.i
 .PHONY : C_\PICO\pico-sdk\src\common\pico_sync\sem.c.i
 
@@ -263,6 +287,7 @@ C_\PICO\pico-sdk\src\common\pico_sync\sem.s: C_\PICO\pico-sdk\src\common\pico_sy
 
 # target to generate assembly for a file
 C_\PICO\pico-sdk\src\common\pico_sync\sem.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\common\pico_sync\sem.c.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\common\pico_sync\sem.c.s
 .PHONY : C_\PICO\pico-sdk\src\common\pico_sync\sem.c.s
 
@@ -271,6 +296,7 @@ C_\PICO\pico-sdk\src\common\pico_time\time.obj: C_\PICO\pico-sdk\src\common\pico
 
 # target to build an object file
 C_\PICO\pico-sdk\src\common\pico_time\time.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\common\pico_time\time.c.obj
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\common\pico_time\time.c.obj
 .PHONY : C_\PICO\pico-sdk\src\common\pico_time\time.c.obj
 
@@ -279,6 +305,7 @@ C_\PICO\pico-sdk\src\common\pico_time\time.i: C_\PICO\pico-sdk\src\common\pico_t
 
 # target to preprocess a source file
 C_\PICO\pico-sdk\src\common\pico_time\time.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\common\pico_time\time.c.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\common\pico_time\time.c.i
 .PHONY : C_\PICO\pico-sdk\src\common\pico_time\time.c.i
 
@@ -287,6 +314,7 @@ C_\PICO\pico-sdk\src\common\pico_time\time.s: C_\PICO\pico-sdk\src\common\pico_t
 
 # target to generate assembly for a file
 C_\PICO\pico-sdk\src\common\pico_time\time.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\common\pico_time\time.c.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\common\pico_time\time.c.s
 .PHONY : C_\PICO\pico-sdk\src\common\pico_time\time.c.s
 
@@ -295,6 +323,7 @@ C_\PICO\pico-sdk\src\common\pico_time\timeout_helper.obj: C_\PICO\pico-sdk\src\c
 
 # target to build an object file
 C_\PICO\pico-sdk\src\common\pico_time\timeout_helper.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\common\pico_time\timeout_helper.c.obj
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\common\pico_time\timeout_helper.c.obj
 .PHONY : C_\PICO\pico-sdk\src\common\pico_time\timeout_helper.c.obj
 
@@ -303,6 +332,7 @@ C_\PICO\pico-sdk\src\common\pico_time\timeout_helper.i: C_\PICO\pico-sdk\src\com
 
 # target to preprocess a source file
 C_\PICO\pico-sdk\src\common\pico_time\timeout_helper.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\common\pico_time\timeout_helper.c.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\common\pico_time\timeout_helper.c.i
 .PHONY : C_\PICO\pico-sdk\src\common\pico_time\timeout_helper.c.i
 
@@ -311,6 +341,7 @@ C_\PICO\pico-sdk\src\common\pico_time\timeout_helper.s: C_\PICO\pico-sdk\src\com
 
 # target to generate assembly for a file
 C_\PICO\pico-sdk\src\common\pico_time\timeout_helper.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\common\pico_time\timeout_helper.c.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\common\pico_time\timeout_helper.c.s
 .PHONY : C_\PICO\pico-sdk\src\common\pico_time\timeout_helper.c.s
 
@@ -319,6 +350,7 @@ C_\PICO\pico-sdk\src\common\pico_util\datetime.obj: C_\PICO\pico-sdk\src\common\
 
 # target to build an object file
 C_\PICO\pico-sdk\src\common\pico_util\datetime.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\common\pico_util\datetime.c.obj
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\common\pico_util\datetime.c.obj
 .PHONY : C_\PICO\pico-sdk\src\common\pico_util\datetime.c.obj
 
@@ -327,6 +359,7 @@ C_\PICO\pico-sdk\src\common\pico_util\datetime.i: C_\PICO\pico-sdk\src\common\pi
 
 # target to preprocess a source file
 C_\PICO\pico-sdk\src\common\pico_util\datetime.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\common\pico_util\datetime.c.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\common\pico_util\datetime.c.i
 .PHONY : C_\PICO\pico-sdk\src\common\pico_util\datetime.c.i
 
@@ -335,6 +368,7 @@ C_\PICO\pico-sdk\src\common\pico_util\datetime.s: C_\PICO\pico-sdk\src\common\pi
 
 # target to generate assembly for a file
 C_\PICO\pico-sdk\src\common\pico_util\datetime.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\common\pico_util\datetime.c.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\common\pico_util\datetime.c.s
 .PHONY : C_\PICO\pico-sdk\src\common\pico_util\datetime.c.s
 
@@ -343,6 +377,7 @@ C_\PICO\pico-sdk\src\common\pico_util\pheap.obj: C_\PICO\pico-sdk\src\common\pic
 
 # target to build an object file
 C_\PICO\pico-sdk\src\common\pico_util\pheap.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\common\pico_util\pheap.c.obj
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\common\pico_util\pheap.c.obj
 .PHONY : C_\PICO\pico-sdk\src\common\pico_util\pheap.c.obj
 
@@ -351,6 +386,7 @@ C_\PICO\pico-sdk\src\common\pico_util\pheap.i: C_\PICO\pico-sdk\src\common\pico_
 
 # target to preprocess a source file
 C_\PICO\pico-sdk\src\common\pico_util\pheap.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\common\pico_util\pheap.c.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\common\pico_util\pheap.c.i
 .PHONY : C_\PICO\pico-sdk\src\common\pico_util\pheap.c.i
 
@@ -359,6 +395,7 @@ C_\PICO\pico-sdk\src\common\pico_util\pheap.s: C_\PICO\pico-sdk\src\common\pico_
 
 # target to generate assembly for a file
 C_\PICO\pico-sdk\src\common\pico_util\pheap.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\common\pico_util\pheap.c.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\common\pico_util\pheap.c.s
 .PHONY : C_\PICO\pico-sdk\src\common\pico_util\pheap.c.s
 
@@ -367,6 +404,7 @@ C_\PICO\pico-sdk\src\common\pico_util\queue.obj: C_\PICO\pico-sdk\src\common\pic
 
 # target to build an object file
 C_\PICO\pico-sdk\src\common\pico_util\queue.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\common\pico_util\queue.c.obj
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\common\pico_util\queue.c.obj
 .PHONY : C_\PICO\pico-sdk\src\common\pico_util\queue.c.obj
 
@@ -375,6 +413,7 @@ C_\PICO\pico-sdk\src\common\pico_util\queue.i: C_\PICO\pico-sdk\src\common\pico_
 
 # target to preprocess a source file
 C_\PICO\pico-sdk\src\common\pico_util\queue.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\common\pico_util\queue.c.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\common\pico_util\queue.c.i
 .PHONY : C_\PICO\pico-sdk\src\common\pico_util\queue.c.i
 
@@ -383,6 +422,7 @@ C_\PICO\pico-sdk\src\common\pico_util\queue.s: C_\PICO\pico-sdk\src\common\pico_
 
 # target to generate assembly for a file
 C_\PICO\pico-sdk\src\common\pico_util\queue.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\common\pico_util\queue.c.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\common\pico_util\queue.c.s
 .PHONY : C_\PICO\pico-sdk\src\common\pico_util\queue.c.s
 
@@ -415,6 +455,7 @@ C_\PICO\pico-sdk\src\rp2_common\hardware_claim\claim.obj: C_\PICO\pico-sdk\src\r
 
 # target to build an object file
 C_\PICO\pico-sdk\src\rp2_common\hardware_claim\claim.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_claim\claim.c.obj
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_claim\claim.c.obj
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\hardware_claim\claim.c.obj
 
@@ -423,6 +464,7 @@ C_\PICO\pico-sdk\src\rp2_common\hardware_claim\claim.i: C_\PICO\pico-sdk\src\rp2
 
 # target to preprocess a source file
 C_\PICO\pico-sdk\src\rp2_common\hardware_claim\claim.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_claim\claim.c.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_claim\claim.c.i
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\hardware_claim\claim.c.i
 
@@ -431,6 +473,7 @@ C_\PICO\pico-sdk\src\rp2_common\hardware_claim\claim.s: C_\PICO\pico-sdk\src\rp2
 
 # target to generate assembly for a file
 C_\PICO\pico-sdk\src\rp2_common\hardware_claim\claim.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_claim\claim.c.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_claim\claim.c.s
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\hardware_claim\claim.c.s
 
@@ -439,6 +482,7 @@ C_\PICO\pico-sdk\src\rp2_common\hardware_clocks\clocks.obj: C_\PICO\pico-sdk\src
 
 # target to build an object file
 C_\PICO\pico-sdk\src\rp2_common\hardware_clocks\clocks.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_clocks\clocks.c.obj
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_clocks\clocks.c.obj
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\hardware_clocks\clocks.c.obj
 
@@ -447,6 +491,7 @@ C_\PICO\pico-sdk\src\rp2_common\hardware_clocks\clocks.i: C_\PICO\pico-sdk\src\r
 
 # target to preprocess a source file
 C_\PICO\pico-sdk\src\rp2_common\hardware_clocks\clocks.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_clocks\clocks.c.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_clocks\clocks.c.i
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\hardware_clocks\clocks.c.i
 
@@ -455,6 +500,7 @@ C_\PICO\pico-sdk\src\rp2_common\hardware_clocks\clocks.s: C_\PICO\pico-sdk\src\r
 
 # target to generate assembly for a file
 C_\PICO\pico-sdk\src\rp2_common\hardware_clocks\clocks.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_clocks\clocks.c.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_clocks\clocks.c.s
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\hardware_clocks\clocks.c.s
 
@@ -463,6 +509,7 @@ C_\PICO\pico-sdk\src\rp2_common\hardware_divider\divider.obj: C_\PICO\pico-sdk\s
 
 # target to build an object file
 C_\PICO\pico-sdk\src\rp2_common\hardware_divider\divider.S.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_divider\divider.S.obj
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_divider\divider.S.obj
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\hardware_divider\divider.S.obj
 
@@ -471,6 +518,7 @@ C_\PICO\pico-sdk\src\rp2_common\hardware_gpio\gpio.obj: C_\PICO\pico-sdk\src\rp2
 
 # target to build an object file
 C_\PICO\pico-sdk\src\rp2_common\hardware_gpio\gpio.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_gpio\gpio.c.obj
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_gpio\gpio.c.obj
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\hardware_gpio\gpio.c.obj
 
@@ -479,6 +527,7 @@ C_\PICO\pico-sdk\src\rp2_common\hardware_gpio\gpio.i: C_\PICO\pico-sdk\src\rp2_c
 
 # target to preprocess a source file
 C_\PICO\pico-sdk\src\rp2_common\hardware_gpio\gpio.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_gpio\gpio.c.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_gpio\gpio.c.i
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\hardware_gpio\gpio.c.i
 
@@ -487,6 +536,7 @@ C_\PICO\pico-sdk\src\rp2_common\hardware_gpio\gpio.s: C_\PICO\pico-sdk\src\rp2_c
 
 # target to generate assembly for a file
 C_\PICO\pico-sdk\src\rp2_common\hardware_gpio\gpio.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_gpio\gpio.c.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_gpio\gpio.c.s
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\hardware_gpio\gpio.c.s
 
@@ -495,6 +545,7 @@ C_\PICO\pico-sdk\src\rp2_common\hardware_irq\irq.obj: C_\PICO\pico-sdk\src\rp2_c
 
 # target to build an object file
 C_\PICO\pico-sdk\src\rp2_common\hardware_irq\irq.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_irq\irq.c.obj
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_irq\irq.c.obj
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\hardware_irq\irq.c.obj
 
@@ -503,6 +554,7 @@ C_\PICO\pico-sdk\src\rp2_common\hardware_irq\irq.i: C_\PICO\pico-sdk\src\rp2_com
 
 # target to preprocess a source file
 C_\PICO\pico-sdk\src\rp2_common\hardware_irq\irq.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_irq\irq.c.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_irq\irq.c.i
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\hardware_irq\irq.c.i
 
@@ -511,6 +563,7 @@ C_\PICO\pico-sdk\src\rp2_common\hardware_irq\irq.s: C_\PICO\pico-sdk\src\rp2_com
 
 # target to generate assembly for a file
 C_\PICO\pico-sdk\src\rp2_common\hardware_irq\irq.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_irq\irq.c.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_irq\irq.c.s
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\hardware_irq\irq.c.s
 
@@ -519,6 +572,7 @@ C_\PICO\pico-sdk\src\rp2_common\hardware_irq\irq_handler_chain.obj: C_\PICO\pico
 
 # target to build an object file
 C_\PICO\pico-sdk\src\rp2_common\hardware_irq\irq_handler_chain.S.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_irq\irq_handler_chain.S.obj
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_irq\irq_handler_chain.S.obj
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\hardware_irq\irq_handler_chain.S.obj
 
@@ -527,6 +581,7 @@ C_\PICO\pico-sdk\src\rp2_common\hardware_pll\pll.obj: C_\PICO\pico-sdk\src\rp2_c
 
 # target to build an object file
 C_\PICO\pico-sdk\src\rp2_common\hardware_pll\pll.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_pll\pll.c.obj
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_pll\pll.c.obj
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\hardware_pll\pll.c.obj
 
@@ -535,6 +590,7 @@ C_\PICO\pico-sdk\src\rp2_common\hardware_pll\pll.i: C_\PICO\pico-sdk\src\rp2_com
 
 # target to preprocess a source file
 C_\PICO\pico-sdk\src\rp2_common\hardware_pll\pll.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_pll\pll.c.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_pll\pll.c.i
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\hardware_pll\pll.c.i
 
@@ -543,6 +599,7 @@ C_\PICO\pico-sdk\src\rp2_common\hardware_pll\pll.s: C_\PICO\pico-sdk\src\rp2_com
 
 # target to generate assembly for a file
 C_\PICO\pico-sdk\src\rp2_common\hardware_pll\pll.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_pll\pll.c.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_pll\pll.c.s
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\hardware_pll\pll.c.s
 
@@ -551,6 +608,7 @@ C_\PICO\pico-sdk\src\rp2_common\hardware_sync\sync.obj: C_\PICO\pico-sdk\src\rp2
 
 # target to build an object file
 C_\PICO\pico-sdk\src\rp2_common\hardware_sync\sync.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_sync\sync.c.obj
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_sync\sync.c.obj
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\hardware_sync\sync.c.obj
 
@@ -559,6 +617,7 @@ C_\PICO\pico-sdk\src\rp2_common\hardware_sync\sync.i: C_\PICO\pico-sdk\src\rp2_c
 
 # target to preprocess a source file
 C_\PICO\pico-sdk\src\rp2_common\hardware_sync\sync.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_sync\sync.c.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_sync\sync.c.i
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\hardware_sync\sync.c.i
 
@@ -567,6 +626,7 @@ C_\PICO\pico-sdk\src\rp2_common\hardware_sync\sync.s: C_\PICO\pico-sdk\src\rp2_c
 
 # target to generate assembly for a file
 C_\PICO\pico-sdk\src\rp2_common\hardware_sync\sync.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_sync\sync.c.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_sync\sync.c.s
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\hardware_sync\sync.c.s
 
@@ -575,6 +635,7 @@ C_\PICO\pico-sdk\src\rp2_common\hardware_timer\timer.obj: C_\PICO\pico-sdk\src\r
 
 # target to build an object file
 C_\PICO\pico-sdk\src\rp2_common\hardware_timer\timer.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_timer\timer.c.obj
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_timer\timer.c.obj
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\hardware_timer\timer.c.obj
 
@@ -583,6 +644,7 @@ C_\PICO\pico-sdk\src\rp2_common\hardware_timer\timer.i: C_\PICO\pico-sdk\src\rp2
 
 # target to preprocess a source file
 C_\PICO\pico-sdk\src\rp2_common\hardware_timer\timer.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_timer\timer.c.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_timer\timer.c.i
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\hardware_timer\timer.c.i
 
@@ -591,6 +653,7 @@ C_\PICO\pico-sdk\src\rp2_common\hardware_timer\timer.s: C_\PICO\pico-sdk\src\rp2
 
 # target to generate assembly for a file
 C_\PICO\pico-sdk\src\rp2_common\hardware_timer\timer.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_timer\timer.c.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_timer\timer.c.s
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\hardware_timer\timer.c.s
 
@@ -599,6 +662,7 @@ C_\PICO\pico-sdk\src\rp2_common\hardware_uart\uart.obj: C_\PICO\pico-sdk\src\rp2
 
 # target to build an object file
 C_\PICO\pico-sdk\src\rp2_common\hardware_uart\uart.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_uart\uart.c.obj
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_uart\uart.c.obj
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\hardware_uart\uart.c.obj
 
@@ -607,6 +671,7 @@ C_\PICO\pico-sdk\src\rp2_common\hardware_uart\uart.i: C_\PICO\pico-sdk\src\rp2_c
 
 # target to preprocess a source file
 C_\PICO\pico-sdk\src\rp2_common\hardware_uart\uart.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_uart\uart.c.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_uart\uart.c.i
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\hardware_uart\uart.c.i
 
@@ -615,6 +680,7 @@ C_\PICO\pico-sdk\src\rp2_common\hardware_uart\uart.s: C_\PICO\pico-sdk\src\rp2_c
 
 # target to generate assembly for a file
 C_\PICO\pico-sdk\src\rp2_common\hardware_uart\uart.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_uart\uart.c.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_uart\uart.c.s
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\hardware_uart\uart.c.s
 
@@ -623,6 +689,7 @@ C_\PICO\pico-sdk\src\rp2_common\hardware_vreg\vreg.obj: C_\PICO\pico-sdk\src\rp2
 
 # target to build an object file
 C_\PICO\pico-sdk\src\rp2_common\hardware_vreg\vreg.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_vreg\vreg.c.obj
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_vreg\vreg.c.obj
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\hardware_vreg\vreg.c.obj
 
@@ -631,6 +698,7 @@ C_\PICO\pico-sdk\src\rp2_common\hardware_vreg\vreg.i: C_\PICO\pico-sdk\src\rp2_c
 
 # target to preprocess a source file
 C_\PICO\pico-sdk\src\rp2_common\hardware_vreg\vreg.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_vreg\vreg.c.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_vreg\vreg.c.i
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\hardware_vreg\vreg.c.i
 
@@ -639,6 +707,7 @@ C_\PICO\pico-sdk\src\rp2_common\hardware_vreg\vreg.s: C_\PICO\pico-sdk\src\rp2_c
 
 # target to generate assembly for a file
 C_\PICO\pico-sdk\src\rp2_common\hardware_vreg\vreg.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_vreg\vreg.c.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_vreg\vreg.c.s
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\hardware_vreg\vreg.c.s
 
@@ -647,6 +716,7 @@ C_\PICO\pico-sdk\src\rp2_common\hardware_watchdog\watchdog.obj: C_\PICO\pico-sdk
 
 # target to build an object file
 C_\PICO\pico-sdk\src\rp2_common\hardware_watchdog\watchdog.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_watchdog\watchdog.c.obj
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_watchdog\watchdog.c.obj
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\hardware_watchdog\watchdog.c.obj
 
@@ -655,6 +725,7 @@ C_\PICO\pico-sdk\src\rp2_common\hardware_watchdog\watchdog.i: C_\PICO\pico-sdk\s
 
 # target to preprocess a source file
 C_\PICO\pico-sdk\src\rp2_common\hardware_watchdog\watchdog.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_watchdog\watchdog.c.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_watchdog\watchdog.c.i
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\hardware_watchdog\watchdog.c.i
 
@@ -663,6 +734,7 @@ C_\PICO\pico-sdk\src\rp2_common\hardware_watchdog\watchdog.s: C_\PICO\pico-sdk\s
 
 # target to generate assembly for a file
 C_\PICO\pico-sdk\src\rp2_common\hardware_watchdog\watchdog.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_watchdog\watchdog.c.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_watchdog\watchdog.c.s
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\hardware_watchdog\watchdog.c.s
 
@@ -671,6 +743,7 @@ C_\PICO\pico-sdk\src\rp2_common\hardware_xosc\xosc.obj: C_\PICO\pico-sdk\src\rp2
 
 # target to build an object file
 C_\PICO\pico-sdk\src\rp2_common\hardware_xosc\xosc.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_xosc\xosc.c.obj
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_xosc\xosc.c.obj
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\hardware_xosc\xosc.c.obj
 
@@ -679,6 +752,7 @@ C_\PICO\pico-sdk\src\rp2_common\hardware_xosc\xosc.i: C_\PICO\pico-sdk\src\rp2_c
 
 # target to preprocess a source file
 C_\PICO\pico-sdk\src\rp2_common\hardware_xosc\xosc.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_xosc\xosc.c.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_xosc\xosc.c.i
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\hardware_xosc\xosc.c.i
 
@@ -687,6 +761,7 @@ C_\PICO\pico-sdk\src\rp2_common\hardware_xosc\xosc.s: C_\PICO\pico-sdk\src\rp2_c
 
 # target to generate assembly for a file
 C_\PICO\pico-sdk\src\rp2_common\hardware_xosc\xosc.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_xosc\xosc.c.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\hardware_xosc\xosc.c.s
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\hardware_xosc\xosc.c.s
 
@@ -695,6 +770,7 @@ C_\PICO\pico-sdk\src\rp2_common\pico_bit_ops\bit_ops_aeabi.obj: C_\PICO\pico-sdk
 
 # target to build an object file
 C_\PICO\pico-sdk\src\rp2_common\pico_bit_ops\bit_ops_aeabi.S.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\pico_bit_ops\bit_ops_aeabi.S.obj
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_bit_ops\bit_ops_aeabi.S.obj
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\pico_bit_ops\bit_ops_aeabi.S.obj
 
@@ -703,6 +779,7 @@ C_\PICO\pico-sdk\src\rp2_common\pico_bootrom\bootrom.obj: C_\PICO\pico-sdk\src\r
 
 # target to build an object file
 C_\PICO\pico-sdk\src\rp2_common\pico_bootrom\bootrom.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\pico_bootrom\bootrom.c.obj
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_bootrom\bootrom.c.obj
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\pico_bootrom\bootrom.c.obj
 
@@ -711,6 +788,7 @@ C_\PICO\pico-sdk\src\rp2_common\pico_bootrom\bootrom.i: C_\PICO\pico-sdk\src\rp2
 
 # target to preprocess a source file
 C_\PICO\pico-sdk\src\rp2_common\pico_bootrom\bootrom.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\pico_bootrom\bootrom.c.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_bootrom\bootrom.c.i
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\pico_bootrom\bootrom.c.i
 
@@ -719,6 +797,7 @@ C_\PICO\pico-sdk\src\rp2_common\pico_bootrom\bootrom.s: C_\PICO\pico-sdk\src\rp2
 
 # target to generate assembly for a file
 C_\PICO\pico-sdk\src\rp2_common\pico_bootrom\bootrom.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\pico_bootrom\bootrom.c.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_bootrom\bootrom.c.s
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\pico_bootrom\bootrom.c.s
 
@@ -727,6 +806,7 @@ C_\PICO\pico-sdk\src\rp2_common\pico_divider\divider.obj: C_\PICO\pico-sdk\src\r
 
 # target to build an object file
 C_\PICO\pico-sdk\src\rp2_common\pico_divider\divider.S.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\pico_divider\divider.S.obj
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_divider\divider.S.obj
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\pico_divider\divider.S.obj
 
@@ -735,6 +815,7 @@ C_\PICO\pico-sdk\src\rp2_common\pico_double\double_aeabi.obj: C_\PICO\pico-sdk\s
 
 # target to build an object file
 C_\PICO\pico-sdk\src\rp2_common\pico_double\double_aeabi.S.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\pico_double\double_aeabi.S.obj
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_double\double_aeabi.S.obj
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\pico_double\double_aeabi.S.obj
 
@@ -743,6 +824,7 @@ C_\PICO\pico-sdk\src\rp2_common\pico_double\double_init_rom.obj: C_\PICO\pico-sd
 
 # target to build an object file
 C_\PICO\pico-sdk\src\rp2_common\pico_double\double_init_rom.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\pico_double\double_init_rom.c.obj
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_double\double_init_rom.c.obj
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\pico_double\double_init_rom.c.obj
 
@@ -751,6 +833,7 @@ C_\PICO\pico-sdk\src\rp2_common\pico_double\double_init_rom.i: C_\PICO\pico-sdk\
 
 # target to preprocess a source file
 C_\PICO\pico-sdk\src\rp2_common\pico_double\double_init_rom.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\pico_double\double_init_rom.c.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_double\double_init_rom.c.i
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\pico_double\double_init_rom.c.i
 
@@ -759,6 +842,7 @@ C_\PICO\pico-sdk\src\rp2_common\pico_double\double_init_rom.s: C_\PICO\pico-sdk\
 
 # target to generate assembly for a file
 C_\PICO\pico-sdk\src\rp2_common\pico_double\double_init_rom.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\pico_double\double_init_rom.c.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_double\double_init_rom.c.s
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\pico_double\double_init_rom.c.s
 
@@ -767,6 +851,7 @@ C_\PICO\pico-sdk\src\rp2_common\pico_double\double_math.obj: C_\PICO\pico-sdk\sr
 
 # target to build an object file
 C_\PICO\pico-sdk\src\rp2_common\pico_double\double_math.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\pico_double\double_math.c.obj
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_double\double_math.c.obj
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\pico_double\double_math.c.obj
 
@@ -775,6 +860,7 @@ C_\PICO\pico-sdk\src\rp2_common\pico_double\double_math.i: C_\PICO\pico-sdk\src\
 
 # target to preprocess a source file
 C_\PICO\pico-sdk\src\rp2_common\pico_double\double_math.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\pico_double\double_math.c.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_double\double_math.c.i
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\pico_double\double_math.c.i
 
@@ -783,6 +869,7 @@ C_\PICO\pico-sdk\src\rp2_common\pico_double\double_math.s: C_\PICO\pico-sdk\src\
 
 # target to generate assembly for a file
 C_\PICO\pico-sdk\src\rp2_common\pico_double\double_math.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\pico_double\double_math.c.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_double\double_math.c.s
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\pico_double\double_math.c.s
 
@@ -791,6 +878,7 @@ C_\PICO\pico-sdk\src\rp2_common\pico_double\double_v1_rom_shim.obj: C_\PICO\pico
 
 # target to build an object file
 C_\PICO\pico-sdk\src\rp2_common\pico_double\double_v1_rom_shim.S.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\pico_double\double_v1_rom_shim.S.obj
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_double\double_v1_rom_shim.S.obj
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\pico_double\double_v1_rom_shim.S.obj
 
@@ -799,6 +887,7 @@ C_\PICO\pico-sdk\src\rp2_common\pico_float\float_aeabi.obj: C_\PICO\pico-sdk\src
 
 # target to build an object file
 C_\PICO\pico-sdk\src\rp2_common\pico_float\float_aeabi.S.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\pico_float\float_aeabi.S.obj
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_float\float_aeabi.S.obj
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\pico_float\float_aeabi.S.obj
 
@@ -807,6 +896,7 @@ C_\PICO\pico-sdk\src\rp2_common\pico_float\float_init_rom.obj: C_\PICO\pico-sdk\
 
 # target to build an object file
 C_\PICO\pico-sdk\src\rp2_common\pico_float\float_init_rom.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\pico_float\float_init_rom.c.obj
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_float\float_init_rom.c.obj
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\pico_float\float_init_rom.c.obj
 
@@ -815,6 +905,7 @@ C_\PICO\pico-sdk\src\rp2_common\pico_float\float_init_rom.i: C_\PICO\pico-sdk\sr
 
 # target to preprocess a source file
 C_\PICO\pico-sdk\src\rp2_common\pico_float\float_init_rom.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\pico_float\float_init_rom.c.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_float\float_init_rom.c.i
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\pico_float\float_init_rom.c.i
 
@@ -823,6 +914,7 @@ C_\PICO\pico-sdk\src\rp2_common\pico_float\float_init_rom.s: C_\PICO\pico-sdk\sr
 
 # target to generate assembly for a file
 C_\PICO\pico-sdk\src\rp2_common\pico_float\float_init_rom.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\pico_float\float_init_rom.c.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_float\float_init_rom.c.s
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\pico_float\float_init_rom.c.s
 
@@ -831,6 +923,7 @@ C_\PICO\pico-sdk\src\rp2_common\pico_float\float_math.obj: C_\PICO\pico-sdk\src\
 
 # target to build an object file
 C_\PICO\pico-sdk\src\rp2_common\pico_float\float_math.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\pico_float\float_math.c.obj
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_float\float_math.c.obj
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\pico_float\float_math.c.obj
 
@@ -839,6 +932,7 @@ C_\PICO\pico-sdk\src\rp2_common\pico_float\float_math.i: C_\PICO\pico-sdk\src\rp
 
 # target to preprocess a source file
 C_\PICO\pico-sdk\src\rp2_common\pico_float\float_math.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\pico_float\float_math.c.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_float\float_math.c.i
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\pico_float\float_math.c.i
 
@@ -847,6 +941,7 @@ C_\PICO\pico-sdk\src\rp2_common\pico_float\float_math.s: C_\PICO\pico-sdk\src\rp
 
 # target to generate assembly for a file
 C_\PICO\pico-sdk\src\rp2_common\pico_float\float_math.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\pico_float\float_math.c.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_float\float_math.c.s
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\pico_float\float_math.c.s
 
@@ -855,6 +950,7 @@ C_\PICO\pico-sdk\src\rp2_common\pico_float\float_v1_rom_shim.obj: C_\PICO\pico-s
 
 # target to build an object file
 C_\PICO\pico-sdk\src\rp2_common\pico_float\float_v1_rom_shim.S.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\pico_float\float_v1_rom_shim.S.obj
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_float\float_v1_rom_shim.S.obj
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\pico_float\float_v1_rom_shim.S.obj
 
@@ -863,6 +959,7 @@ C_\PICO\pico-sdk\src\rp2_common\pico_int64_ops\pico_int64_ops_aeabi.obj: C_\PICO
 
 # target to build an object file
 C_\PICO\pico-sdk\src\rp2_common\pico_int64_ops\pico_int64_ops_aeabi.S.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\pico_int64_ops\pico_int64_ops_aeabi.S.obj
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_int64_ops\pico_int64_ops_aeabi.S.obj
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\pico_int64_ops\pico_int64_ops_aeabi.S.obj
 
@@ -871,6 +968,7 @@ C_\PICO\pico-sdk\src\rp2_common\pico_malloc\pico_malloc.obj: C_\PICO\pico-sdk\sr
 
 # target to build an object file
 C_\PICO\pico-sdk\src\rp2_common\pico_malloc\pico_malloc.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\pico_malloc\pico_malloc.c.obj
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_malloc\pico_malloc.c.obj
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\pico_malloc\pico_malloc.c.obj
 
@@ -879,6 +977,7 @@ C_\PICO\pico-sdk\src\rp2_common\pico_malloc\pico_malloc.i: C_\PICO\pico-sdk\src\
 
 # target to preprocess a source file
 C_\PICO\pico-sdk\src\rp2_common\pico_malloc\pico_malloc.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\pico_malloc\pico_malloc.c.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_malloc\pico_malloc.c.i
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\pico_malloc\pico_malloc.c.i
 
@@ -887,6 +986,7 @@ C_\PICO\pico-sdk\src\rp2_common\pico_malloc\pico_malloc.s: C_\PICO\pico-sdk\src\
 
 # target to generate assembly for a file
 C_\PICO\pico-sdk\src\rp2_common\pico_malloc\pico_malloc.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\pico_malloc\pico_malloc.c.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_malloc\pico_malloc.c.s
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\pico_malloc\pico_malloc.c.s
 
@@ -895,6 +995,7 @@ C_\PICO\pico-sdk\src\rp2_common\pico_mem_ops\mem_ops_aeabi.obj: C_\PICO\pico-sdk
 
 # target to build an object file
 C_\PICO\pico-sdk\src\rp2_common\pico_mem_ops\mem_ops_aeabi.S.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\pico_mem_ops\mem_ops_aeabi.S.obj
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_mem_ops\mem_ops_aeabi.S.obj
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\pico_mem_ops\mem_ops_aeabi.S.obj
 
@@ -903,6 +1004,7 @@ C_\PICO\pico-sdk\src\rp2_common\pico_platform\platform.obj: C_\PICO\pico-sdk\src
 
 # target to build an object file
 C_\PICO\pico-sdk\src\rp2_common\pico_platform\platform.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\pico_platform\platform.c.obj
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_platform\platform.c.obj
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\pico_platform\platform.c.obj
 
@@ -911,6 +1013,7 @@ C_\PICO\pico-sdk\src\rp2_common\pico_platform\platform.i: C_\PICO\pico-sdk\src\r
 
 # target to preprocess a source file
 C_\PICO\pico-sdk\src\rp2_common\pico_platform\platform.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\pico_platform\platform.c.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_platform\platform.c.i
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\pico_platform\platform.c.i
 
@@ -919,6 +1022,7 @@ C_\PICO\pico-sdk\src\rp2_common\pico_platform\platform.s: C_\PICO\pico-sdk\src\r
 
 # target to generate assembly for a file
 C_\PICO\pico-sdk\src\rp2_common\pico_platform\platform.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\pico_platform\platform.c.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_platform\platform.c.s
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\pico_platform\platform.c.s
 
@@ -927,6 +1031,7 @@ C_\PICO\pico-sdk\src\rp2_common\pico_printf\printf.obj: C_\PICO\pico-sdk\src\rp2
 
 # target to build an object file
 C_\PICO\pico-sdk\src\rp2_common\pico_printf\printf.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\pico_printf\printf.c.obj
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_printf\printf.c.obj
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\pico_printf\printf.c.obj
 
@@ -935,6 +1040,7 @@ C_\PICO\pico-sdk\src\rp2_common\pico_printf\printf.i: C_\PICO\pico-sdk\src\rp2_c
 
 # target to preprocess a source file
 C_\PICO\pico-sdk\src\rp2_common\pico_printf\printf.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\pico_printf\printf.c.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_printf\printf.c.i
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\pico_printf\printf.c.i
 
@@ -943,6 +1049,7 @@ C_\PICO\pico-sdk\src\rp2_common\pico_printf\printf.s: C_\PICO\pico-sdk\src\rp2_c
 
 # target to generate assembly for a file
 C_\PICO\pico-sdk\src\rp2_common\pico_printf\printf.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\pico_printf\printf.c.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_printf\printf.c.s
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\pico_printf\printf.c.s
 
@@ -951,6 +1058,7 @@ C_\PICO\pico-sdk\src\rp2_common\pico_runtime\runtime.obj: C_\PICO\pico-sdk\src\r
 
 # target to build an object file
 C_\PICO\pico-sdk\src\rp2_common\pico_runtime\runtime.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\pico_runtime\runtime.c.obj
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_runtime\runtime.c.obj
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\pico_runtime\runtime.c.obj
 
@@ -959,6 +1067,7 @@ C_\PICO\pico-sdk\src\rp2_common\pico_runtime\runtime.i: C_\PICO\pico-sdk\src\rp2
 
 # target to preprocess a source file
 C_\PICO\pico-sdk\src\rp2_common\pico_runtime\runtime.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\pico_runtime\runtime.c.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_runtime\runtime.c.i
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\pico_runtime\runtime.c.i
 
@@ -967,6 +1076,7 @@ C_\PICO\pico-sdk\src\rp2_common\pico_runtime\runtime.s: C_\PICO\pico-sdk\src\rp2
 
 # target to generate assembly for a file
 C_\PICO\pico-sdk\src\rp2_common\pico_runtime\runtime.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\pico_runtime\runtime.c.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_runtime\runtime.c.s
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\pico_runtime\runtime.c.s
 
@@ -975,6 +1085,7 @@ C_\PICO\pico-sdk\src\rp2_common\pico_standard_link\binary_info.obj: C_\PICO\pico
 
 # target to build an object file
 C_\PICO\pico-sdk\src\rp2_common\pico_standard_link\binary_info.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\pico_standard_link\binary_info.c.obj
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_standard_link\binary_info.c.obj
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\pico_standard_link\binary_info.c.obj
 
@@ -983,6 +1094,7 @@ C_\PICO\pico-sdk\src\rp2_common\pico_standard_link\binary_info.i: C_\PICO\pico-s
 
 # target to preprocess a source file
 C_\PICO\pico-sdk\src\rp2_common\pico_standard_link\binary_info.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\pico_standard_link\binary_info.c.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_standard_link\binary_info.c.i
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\pico_standard_link\binary_info.c.i
 
@@ -991,6 +1103,7 @@ C_\PICO\pico-sdk\src\rp2_common\pico_standard_link\binary_info.s: C_\PICO\pico-s
 
 # target to generate assembly for a file
 C_\PICO\pico-sdk\src\rp2_common\pico_standard_link\binary_info.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\pico_standard_link\binary_info.c.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_standard_link\binary_info.c.s
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\pico_standard_link\binary_info.c.s
 
@@ -999,6 +1112,7 @@ C_\PICO\pico-sdk\src\rp2_common\pico_standard_link\crt0.obj: C_\PICO\pico-sdk\sr
 
 # target to build an object file
 C_\PICO\pico-sdk\src\rp2_common\pico_standard_link\crt0.S.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\pico_standard_link\crt0.S.obj
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_standard_link\crt0.S.obj
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\pico_standard_link\crt0.S.obj
 
@@ -1007,6 +1121,7 @@ C_\PICO\pico-sdk\src\rp2_common\pico_standard_link\new_delete.obj: C_\PICO\pico-
 
 # target to build an object file
 C_\PICO\pico-sdk\src\rp2_common\pico_standard_link\new_delete.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\pico_standard_link\new_delete.cpp.obj
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_standard_link\new_delete.cpp.obj
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\pico_standard_link\new_delete.cpp.obj
 
@@ -1015,6 +1130,7 @@ C_\PICO\pico-sdk\src\rp2_common\pico_standard_link\new_delete.i: C_\PICO\pico-sd
 
 # target to preprocess a source file
 C_\PICO\pico-sdk\src\rp2_common\pico_standard_link\new_delete.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\pico_standard_link\new_delete.cpp.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_standard_link\new_delete.cpp.i
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\pico_standard_link\new_delete.cpp.i
 
@@ -1023,6 +1139,7 @@ C_\PICO\pico-sdk\src\rp2_common\pico_standard_link\new_delete.s: C_\PICO\pico-sd
 
 # target to generate assembly for a file
 C_\PICO\pico-sdk\src\rp2_common\pico_standard_link\new_delete.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\pico_standard_link\new_delete.cpp.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_standard_link\new_delete.cpp.s
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\pico_standard_link\new_delete.cpp.s
 
@@ -1031,6 +1148,7 @@ C_\PICO\pico-sdk\src\rp2_common\pico_stdio\stdio.obj: C_\PICO\pico-sdk\src\rp2_c
 
 # target to build an object file
 C_\PICO\pico-sdk\src\rp2_common\pico_stdio\stdio.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\pico_stdio\stdio.c.obj
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_stdio\stdio.c.obj
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\pico_stdio\stdio.c.obj
 
@@ -1039,6 +1157,7 @@ C_\PICO\pico-sdk\src\rp2_common\pico_stdio\stdio.i: C_\PICO\pico-sdk\src\rp2_com
 
 # target to preprocess a source file
 C_\PICO\pico-sdk\src\rp2_common\pico_stdio\stdio.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\pico_stdio\stdio.c.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_stdio\stdio.c.i
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\pico_stdio\stdio.c.i
 
@@ -1047,6 +1166,7 @@ C_\PICO\pico-sdk\src\rp2_common\pico_stdio\stdio.s: C_\PICO\pico-sdk\src\rp2_com
 
 # target to generate assembly for a file
 C_\PICO\pico-sdk\src\rp2_common\pico_stdio\stdio.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\pico_stdio\stdio.c.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_stdio\stdio.c.s
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\pico_stdio\stdio.c.s
 
@@ -1055,6 +1175,7 @@ C_\PICO\pico-sdk\src\rp2_common\pico_stdio_uart\stdio_uart.obj: C_\PICO\pico-sdk
 
 # target to build an object file
 C_\PICO\pico-sdk\src\rp2_common\pico_stdio_uart\stdio_uart.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\pico_stdio_uart\stdio_uart.c.obj
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_stdio_uart\stdio_uart.c.obj
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\pico_stdio_uart\stdio_uart.c.obj
 
@@ -1063,6 +1184,7 @@ C_\PICO\pico-sdk\src\rp2_common\pico_stdio_uart\stdio_uart.i: C_\PICO\pico-sdk\s
 
 # target to preprocess a source file
 C_\PICO\pico-sdk\src\rp2_common\pico_stdio_uart\stdio_uart.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\pico_stdio_uart\stdio_uart.c.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_stdio_uart\stdio_uart.c.i
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\pico_stdio_uart\stdio_uart.c.i
 
@@ -1071,6 +1193,7 @@ C_\PICO\pico-sdk\src\rp2_common\pico_stdio_uart\stdio_uart.s: C_\PICO\pico-sdk\s
 
 # target to generate assembly for a file
 C_\PICO\pico-sdk\src\rp2_common\pico_stdio_uart\stdio_uart.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\pico_stdio_uart\stdio_uart.c.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_stdio_uart\stdio_uart.c.s
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\pico_stdio_uart\stdio_uart.c.s
 
@@ -1079,6 +1202,7 @@ C_\PICO\pico-sdk\src\rp2_common\pico_stdlib\stdlib.obj: C_\PICO\pico-sdk\src\rp2
 
 # target to build an object file
 C_\PICO\pico-sdk\src\rp2_common\pico_stdlib\stdlib.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\pico_stdlib\stdlib.c.obj
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_stdlib\stdlib.c.obj
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\pico_stdlib\stdlib.c.obj
 
@@ -1087,6 +1211,7 @@ C_\PICO\pico-sdk\src\rp2_common\pico_stdlib\stdlib.i: C_\PICO\pico-sdk\src\rp2_c
 
 # target to preprocess a source file
 C_\PICO\pico-sdk\src\rp2_common\pico_stdlib\stdlib.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\pico_stdlib\stdlib.c.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_stdlib\stdlib.c.i
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\pico_stdlib\stdlib.c.i
 
@@ -1095,8 +1220,33 @@ C_\PICO\pico-sdk\src\rp2_common\pico_stdlib\stdlib.s: C_\PICO\pico-sdk\src\rp2_c
 
 # target to generate assembly for a file
 C_\PICO\pico-sdk\src\rp2_common\pico_stdlib\stdlib.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\C_\PICO\pico-sdk\src\rp2_common\pico_stdlib\stdlib.c.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra.dir\C_\PICO\pico-sdk\src\rp2_common\pico_stdlib\stdlib.c.s
 .PHONY : C_\PICO\pico-sdk\src\rp2_common\pico_stdlib\stdlib.c.s
+
+lib\S.obj: lib\S.cpp.obj
+.PHONY : lib\S.obj
+
+# target to build an object file
+lib\S.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\lib\S.cpp.obj
+.PHONY : lib\S.cpp.obj
+
+lib\S.i: lib\S.cpp.i
+.PHONY : lib\S.i
+
+# target to preprocess a source file
+lib\S.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\lib\S.cpp.i
+.PHONY : lib\S.cpp.i
+
+lib\S.s: lib\S.cpp.s
+.PHONY : lib\S.s
+
+# target to generate assembly for a file
+lib\S.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orchestra-lib.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\orchestra-lib.dir\lib\S.cpp.s
+.PHONY : lib\S.cpp.s
 
 orchestra.obj: orchestra.cpp.obj
 .PHONY : orchestra.obj
@@ -1135,6 +1285,7 @@ help:
 	@echo ... bs2_default_padded_checksummed_asm
 	@echo ... bs2_default
 	@echo ... orchestra
+	@echo ... orchestra-lib
 	@echo ... C_/PICO/pico-sdk/src/common/pico_sync/critical_section.obj
 	@echo ... C_/PICO/pico-sdk/src/common/pico_sync/critical_section.i
 	@echo ... C_/PICO/pico-sdk/src/common/pico_sync/critical_section.s
@@ -1251,6 +1402,9 @@ help:
 	@echo ... C_/PICO/pico-sdk/src/rp2_common/pico_stdlib/stdlib.obj
 	@echo ... C_/PICO/pico-sdk/src/rp2_common/pico_stdlib/stdlib.i
 	@echo ... C_/PICO/pico-sdk/src/rp2_common/pico_stdlib/stdlib.s
+	@echo ... lib/S.obj
+	@echo ... lib/S.i
+	@echo ... lib/S.s
 	@echo ... orchestra.obj
 	@echo ... orchestra.i
 	@echo ... orchestra.s

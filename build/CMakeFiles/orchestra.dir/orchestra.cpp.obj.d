@@ -91,4 +91,5 @@ CMakeFiles\orchestra.dir\orchestra.cpp.obj: \
  C:\PICO\pico-sdk\src\rp2040\hardware_regs\include/hardware/regs/m0plus.h \
  C:\PICO\pico-sdk\src\rp2_common\hardware_adc\include/hardware/adc.h \
  C:\PICO\pico-sdk\src\rp2040\hardware_structs\include/hardware/structs/adc.h \
- C:\PICO\pico-sdk\src\rp2040\hardware_regs\include/hardware/regs/adc.h
+ C:\PICO\pico-sdk\src\rp2040\hardware_regs\include/hardware/regs/adc.h \
+ C:\PICO\orchestra\lib/S.h

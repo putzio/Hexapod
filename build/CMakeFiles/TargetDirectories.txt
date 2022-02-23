@@ -1,3 +1,4 @@
+C:/PICO/orchestra/build/CMakeFiles/orchestra-lib.dir
 C:/PICO/orchestra/build/CMakeFiles/orchestra.dir
 C:/PICO/orchestra/build/CMakeFiles/ELF2UF2Build.dir
 C:/PICO/orchestra/build/CMakeFiles/edit_cache.dir
