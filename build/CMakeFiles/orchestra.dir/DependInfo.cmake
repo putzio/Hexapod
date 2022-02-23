@@ -53,7 +53,7 @@ set(CMAKE_TARGET_DEFINITIONS_ASM
   "LIB_PICO_UTIL=1"
   "PICO_BOARD=\"pico\""
   "PICO_BUILD=1"
-  "PICO_CMAKE_BUILD_TYPE=\"Debug\""
+  "PICO_CMAKE_BUILD_TYPE=\"Release\""
   "PICO_COPY_TO_RAM=0"
   "PICO_CXX_ENABLE_EXCEPTIONS=0"
   "PICO_NO_FLASH=0"
@@ -143,12 +143,10 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "C:/PICO/pico-sdk/src/rp2_common/pico_stdio_uart/stdio_uart.c" "CMakeFiles/orchestra.dir/C_/PICO/pico-sdk/src/rp2_common/pico_stdio_uart/stdio_uart.c.obj" "gcc" "CMakeFiles/orchestra.dir/C_/PICO/pico-sdk/src/rp2_common/pico_stdio_uart/stdio_uart.c.obj.d"
   "C:/PICO/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c" "CMakeFiles/orchestra.dir/C_/PICO/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c.obj" "gcc" "CMakeFiles/orchestra.dir/C_/PICO/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c.obj.d"
   "C:/PICO/pico-sdk/src/rp2_common/pico_standard_link/new_delete.cpp" "CMakeFiles/orchestra.dir/C_/PICO/pico-sdk/src/rp2_common/pico_standard_link/new_delete.cpp.obj" "gcc" "CMakeFiles/orchestra.dir/C_/PICO/pico-sdk/src/rp2_common/pico_standard_link/new_delete.cpp.obj.d"
-  "C:/PICO/orchestra/orchestra.cpp" "CMakeFiles/orchestra.dir/orchestra.cpp.obj" "gcc" "CMakeFiles/orchestra.dir/orchestra.cpp.obj.d"
   )
 
 # Targets to which this target links.
 set(CMAKE_TARGET_LINKED_INFO_FILES
-  "C:/PICO/orchestra/build/CMakeFiles/orchestra-lib.dir/DependInfo.cmake"
   )
 
 # Fortran module output directory.

@@ -80,8 +80,6 @@ file(REMOVE_RECURSE
   "CMakeFiles/orchestra.dir/C_/PICO/pico-sdk/src/rp2_common/pico_stdio_uart/stdio_uart.c.obj.d"
   "CMakeFiles/orchestra.dir/C_/PICO/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c.obj"
   "CMakeFiles/orchestra.dir/C_/PICO/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c.obj.d"
-  "CMakeFiles/orchestra.dir/orchestra.cpp.obj"
-  "CMakeFiles/orchestra.dir/orchestra.cpp.obj.d"
   "orchestra.elf"
   "orchestra.elf.manifest"
   "orchestra.pdb"
