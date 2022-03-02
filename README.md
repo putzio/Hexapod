@@ -26,4 +26,8 @@ the main file is hexapod.cpp. It uses classes Servo, Leg and Body, which are inc
 If you woul like to build it on your own you can use VSC and configure your computer as it is shown in the link below:
 https://www.youtube.com/watch?v=B5rQSoOmR5w
 
-### I have described this project in my bachelor thesis and you can read it in the documentation directory (unfortunately it's in polish)  
+## Bachelor thesis 
+I have described this project in my bachelor thesis and you can read it in the documentation directory (unfortunately it's in polish)  
+##  Unity simulation
+I have also created a simulation in Unity (using an older version of my mechanical construction), so you can check it out in my other repository:
+https://github.com/putzio/Hexapod_Unity
