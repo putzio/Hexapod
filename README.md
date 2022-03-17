@@ -1,7 +1,7 @@
 # Hexapod
 
-This is a project of a remotely controlled walking robot
-If you click the link bellow you can see the movie, which presents the robot 
+This is a project of a remotely controlled walking robot. 
+If you click the link bellow you can see the movie, which shows how the robot walks:
 https://photos.app.goo.gl/Wpt8i5VjzHMQxFu78
 
 ## The project consists of 4 main parts: 
