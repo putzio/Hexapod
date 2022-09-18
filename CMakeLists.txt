@@ -18,9 +18,10 @@ pico_sdk_init()
 
 #Creating an executable target "Hexapod" from a single source hexapod.cpp
 add_executable(${PROJECT_NAME} 
-src/hexapod.cpp
-src/pwm_driver.cpp
-)
+    src/hexapod.cpp
+    src/pwm_driver.cpp
+    src/Servo.cpp
+    )
 #libraries
 target_link_libraries(${PROJECT_NAME} 
     pico_stdlib

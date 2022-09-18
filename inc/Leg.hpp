@@ -1,5 +1,5 @@
 #pragma once
-#include "Servo.hpp"
+#include "Servo.h"
 // SERVO POSITIONS
 #define MASTER_SERVO_MIN_POS 100
 #define MASTER_SERVO_MAX_POS 130

@@ -7,7 +7,7 @@
 #include "hardware/irq.h"
 #include "hardware/adc.h"
 #include "hardware/gpio.h"
-#include "Servo.hpp"
+#include "Servo.h"
 #include "Leg.hpp"
 #include "Body.hpp"
 
