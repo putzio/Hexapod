@@ -9,7 +9,8 @@ protected:
     uint slice_num;    // defined in ServoInit() method form the pin variable
     void SetPwm(uint16_t value);
 public:
-    Pwm_driver();
+    Pwm_driver(uint8_t pin);
+    void InitPwm();
     void Enable();
     void Disable();
 };

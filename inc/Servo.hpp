@@ -22,11 +22,9 @@ uint16_t map(float x, uint16_t sMin, uint16_t sMax, uint16_t dMin, uint16_t dMax
 {
     return ((x - (float)sMin) * (dMax - dMin) / (sMax - sMin) + dMin);
 }
-class Servo::
+class Servo: public Pwm_driver
 {
 protected:
-    uint8_t pin;       // given by the user in the constructor
-    uint slice_num;    // defined in ServoInit() method form the pin variable
     bool left = false; // if the servo is on the other side it has to move the opposite way -> left = true
     float calibrationValue = 0;
     // msPosition:
@@ -46,25 +44,13 @@ protected:
         // return another direction
         return pos90 + distance;
     }
-    void ServoInit()
-    {
-        // Tell GPIO it is allocated to the PWM
-        gpio_set_function(this->pin, GPIO_FUNC_PWM);
-        // Find out which PWM slice is connected to GPIO
-        this->slice_num = pwm_gpio_to_slice_num(this->pin);
-        // Set period of 20000 cycles (0 to 20000 inclusive)
-        pwm_set_wrap(this->slice_num, 20000);
-        // setting period = 20ms
-        // set clk div to 38
-        pwm_set_clkdiv_int_frac(this->slice_num, 125, 9);
-    }
     void WriteMs()
     {
         if (left)
-            pwm_set_chan_level(this->slice_num, pwm_gpio_to_channel(this->pin), CalculateLeft(currentPosition) + calibrationValue);
+            SetPwm(CalculateLeft(currentPosition) + calibrationValue);
         else
             // Set channel output high for one cycle before dropping
-            pwm_set_chan_level(this->slice_num, pwm_gpio_to_channel(this->pin), currentPosition + calibrationValue);
+            SetPwm(currentPosition + calibrationValue);
     }
 
 public:
@@ -73,6 +59,7 @@ public:
     int currentPosition;
 
     Servo(uint8_t chosen_pin = 0, bool leftServo = false, int16_t calibration = 0)
+    :Pwm_driver(chosen_pin)
     {
         velocity = MIN_VELOCITY;
         maxVelocity = MAX_VELOCITY;
@@ -80,13 +67,8 @@ public:
         currentPosition = (SERVO_MIN_MS + SERVO_MAX_MS) / 2;
         calibrationValue = calibration;
         done = true;
-        if (chosen_pin < 16 && chosen_pin >= 2)
-        {
-            pin = chosen_pin;
-            ServoInit();
-            left = leftServo;
-        }
     }
+
     void GoToPosition()
     {
         CalculateVelocity();
@@ -152,17 +134,6 @@ public:
             currentPosition = msPosition;
             WriteMs();
         }
-    }
-
-    void Enable()
-    {
-        // Set the PWM running
-        pwm_set_enabled(slice_num, true);
-    }
-    void Disable()
-    {
-        // Set the PWM running
-        pwm_set_enabled(slice_num, false);
     }
 };
 
