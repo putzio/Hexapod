@@ -7,9 +7,9 @@
 #include "hardware/irq.h"
 #include "hardware/adc.h"
 #include "hardware/gpio.h"
-#include "lib/Servo.hpp"
-#include "lib/Leg.hpp"
-#include "lib/Body.hpp"
+#include "Servo.hpp"
+#include "Leg.hpp"
+#include "Body.hpp"
 
 //----------------------my program-------------------------------------------------
 #define UART_ID uart0

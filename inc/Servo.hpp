@@ -1,13 +1,6 @@
 #pragma once
 #include <stdio.h>
-#include "pico/stdlib.h"
-#include "hardware/pwm.h"
-#include "pico/double.h"
-#include "hardware/clocks.h"
-#include "hardware/uart.h"
-#include "hardware/irq.h"
-#include "hardware/adc.h"
-#include "hardware/gpio.h"
+#include "pwm_driver.h"
 // Servo motion parameters
 #define SERVO_MIN_MS 550  // time in microseconds for 0 degrees
 #define SERVO_MAX_MS 2400 // time in microseconds for 180 degrees
@@ -29,7 +22,7 @@ uint16_t map(float x, uint16_t sMin, uint16_t sMax, uint16_t dMin, uint16_t dMax
 {
     return ((x - (float)sMin) * (dMax - dMin) / (sMax - sMin) + dMin);
 }
-class Servo
+class Servo::
 {
 protected:
     uint8_t pin;       // given by the user in the constructor
